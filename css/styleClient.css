@@ -1,0 +1,131 @@
+#fondo{
+    background-image: url("../images/bg-bdr2.png");
+    width: 99.9%;
+    height: 48px;;
+}
+
+.itemLine{
+    vertical-align: top;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.imgUser{
+    width: 50px;
+    height: 50px;
+    display:inline-block;
+    vertical-align: top;
+}
+
+.itemsList{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.itemsList .dropdown-menu-right .img{
+    display: inline-block;
+    vertical-align: top;
+}
+
+li.nav-item.dropdown.itemsList a.itemsLine.nav-link i.itemsLine.icono{
+    display: inline-block;
+    vertical-align: top;
+    line-height: 150%;
+}
+
+li.nav-item.dropdown.itemsList a.itemsLine.nav-link i.icono.usuario{
+    display: inline-block;
+    vertical-align: top;
+    line-height: 300%;
+}
+
+li.nav-item.dropdown.itemsList a.itemsLine.nav-link.nombreUsuario{
+    display: inline-block;
+    vertical-align: top;
+    line-height: 350%;
+}
+
+.collapse.navbar-collapse#navbarResponsive ul.navbar-nav li.nav-item.itemsList img{
+    margin-right: 5px;
+}
+#modalRegistroSocio{
+    width: 100%;
+}
+
+#modalRegistroSocio .modal-dialog{
+    max-width: 100%;
+
+}
+
+#modalRegistroSocio .modal-content{
+    max-width: 80%;
+    margin:auto;
+}
+
+.modal-dialog img.itemsLine{
+    margin: 5px;
+    margin-top:0;
+}
+
+.modal-content .modal-header.headerForm{
+    background: rgb(241, 120, 39);
+   padding:5px;
+}
+
+.modal-content .modal-header.headerForm h4{
+    background: rgb(241, 120, 39);
+    font-weight:bold;
+   margin: 0;
+}
+
+.modal-content .modal-header.headerForm button{
+    color:white;
+   
+}
+
+.hide{
+    display:none;
+}
+
+.myclass .ZebraDialog_Title {
+    background: rgb(241, 120, 39);
+    color:white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.myclass .ZebraDialog_Title a{
+    color:white;
+}
+
+.myclass .ZebraDialog_Body {
+    background-image: url("coffee_48.png");
+    font-size: 21px;
+}
+
+.myclass .ZebraDialog_Buttons a {
+    background: #28a745;
+    border-radius:5px;
+}
+
+.myclass .ZebraDialog_Buttons a:hover {
+    background: #26863d;
+}
+
+
+.myclass{
+    border-radius:5px;
+    width: 30%;
+}
+
+
+#modalRegistroPrestamo .modal-content{
+    max-width: 80%;
+    margin: auto;
+}
+
+
+
+#modalRegistroPrestamo .modal-dialog{
+    max-width: 100%;
+}
