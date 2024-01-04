@@ -60,7 +60,8 @@ $links = array(
     "tipoOperacion" => "listadoTipoOperacion",
     "tipoMovimiento" => "listadoTipoMovimiento",
     "cerrarSesion"  => "cerrar",
-    "amorti" => "listadoAmortPorSocio"
+    "amorti" => "listadoAmortPorSocio",
+    "mora" => "listadoCuotaMora"
 );
 
 $lista = listarSocios();

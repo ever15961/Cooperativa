@@ -57,7 +57,8 @@ $links = array(
     "tipoMovimiento" => "listadoTipoMovimiento",
     "cerrarSesion"  => "cerrar",
     "cuentas" => "listadoCuotas",
-    "amorti" => "listadoAmortPorSocio"
+    "amorti" => "listadoAmortPorSocio",
+    "mora" => "listadoCuotaMora"
 );
 include "../dao/daoPrestamo.php";
 include "../pages/menu/menu.php";

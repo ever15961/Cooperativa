@@ -101,3 +101,6 @@ INNER JOIN socio s ON s.id = p.socio WHERE p.id = ?");
 
 define("OBTENER_CLIENTES_CODIGOS", "SELECT codigoSocio FROM socio");
 
+define("OBTENER_TODOS_PRESTAMOS_MORA","SELECT s.nombre, s.apellido, s.direccion, p.montoPrestamo, p.destinoPrestamo, p.fechaInicio, p.estadoPrestamo, p.id FROM socio s JOIN prestamo p ON s.id = p.socio JOIN cuota c 
+ON p.id = c.prestamo WHERE c.estado = 1 AND c.fechaVencimiento < CURDATE() AND p.estadoPrestamo = 1 GROUP BY p.id");
+

@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
-    <title>Listados Préstamos</title>
+    <title>Listados Préstamos en mora</title>
     
 	<!-- Bootstrap core CSS -->
 	<link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -69,42 +69,19 @@ $links = array(
 include "../dao/daoPrestamo.php";
 include "../pages/menu/menu.php";
 $codigos = obtenerCodigosClientes();
-        if ($_POST) {
-            $txtCliente = $_POST['txtCliente'];
-            $lista = listarPrestamos($txtCliente);
-        } else {
-            $lista = listarPrestamos(0);
-        }
+
+        $lista = listarPrestamosMora();
 ?>
     <hr class="m-0">
     <div class="container-fluid p-4">
-    <h4 class="text-center font-weight-bold mb-4">Listado de Préstamos</h4>
-
-    <div class="row justify-content-center">
-        <form id="buscarForm" method="post" class="col-lg-8">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Código Cliente" aria-label="Recipient's username" aria-describedby="button-addon2" name="txtCliente" list="codigoClientes">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">Buscar</button>
-                    <button class="btn btn-success ml-2 rounded-circle" data-toggle="modal" data-target="#modalRegistroPrestamo" type="button">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+    <h4 class="text-center font-weight-bold mb-4">Listado de Préstamos en Mora</h4>
 
 
 
 
 
-<script>
-    // Agregar un evento de clic al botón "Buscar" para enviar el formulario
-    document.getElementById("buscarForm").addEventListener("submit", function(event) {
-        // Puedes agregar validaciones u otras lógicas antes de enviar el formulario si es necesario
-        // event.preventDefault(); // Descomenta esto si deseas evitar que se envíe el formulario de inmediato
-    });
-</script>
+
+
        <br></br>
 
        

@@ -13,6 +13,7 @@ function iniciar() {
   //  document.querySelector("#buscarSocio").addEventListener("click", buscarSocio);
     document.querySelector("#btnRegistrarPrestamo").addEventListener("click", registrarPrestamo);
     document.querySelector("#btnCerrarPrestamo").addEventListener("click",cerrarModal);
+    document.querySelector("#btnCerrarCuota").addEventListener("click",cerrarModal);
     
 }
 //iniciar clicks de bontones editar y eliminar
@@ -434,6 +435,7 @@ function procesarEliminado(row) {
  }
 function cerrarModal(){
     location.href = location.href;
+    location.reload();
 }
 function validarFormulario() {
     var monto = parseFloat(document.getElementById('monto').value.trim());

@@ -68,7 +68,8 @@ $links = array(
     "tipoOperacion" => "listadoTipoOperacion",
     "tipoMovimiento" => "listadoTipoMovimiento",
     "cerrarSesion"  => "cerrar",
-    "amorti" => "listadoAmortPorSocio"
+    "amorti" => "listadoAmortPorSocio",
+    "mora" => "listadoCuotaMora"
 );
 include "../dao/daoUsuario.php";
 include "../pages/menu/menu.php";

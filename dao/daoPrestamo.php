@@ -436,3 +436,23 @@ function obtenerParametros(){
                 );
 }
 
+
+function listarPrestamosMora(){
+    include "../config/conexion.php";
+    $stm = $conexion->prepare(OBTENER_TODOS_PRESTAMOS_MORA);
+
+    if($stm->execute()) {
+        $result = $stm->get_result();
+
+        // Utiliza un bucle para obtener los resultados
+        $results = array();
+        while ($row = $result->fetch_assoc()) {
+            $results[] = $row;
+        }
+
+        return $results;
+    } else {
+        // Manejar el error si la ejecución falla
+        return null;
+    }
+}

@@ -65,6 +65,9 @@ if (isset($_SESSION["user"])) {
 								<a class="dropdown-item" href="<?php echo $links["movimientos"].".php";?>">
 									<img src="<?php echo $path; ?>images/verMovimientos.png" class="itemsLine"/>Ver Préstamos
 								</a>
+								<a class="dropdown-item" href="<?php echo $links["mora"].".php";?>">
+									<img src="<?php echo $path; ?>images/verMovimientos.png" class="itemsLine"/>Préstamos en mora
+								</a>
 								<!--<a class="dropdown-item" href="404.html">
 									<img src="<?php echo $path; ?>images/addMovimientos.png" class="itemsLine"/>
 									Agregar Movimiento
@@ -84,7 +87,7 @@ if (isset($_SESSION["user"])) {
 									<img src="<?php echo $path; ?>images/verCuentas.png" class="itemsLine"/>Ver Cuotas
 								</a>
 								<a class="dropdown-item" href="<?php echo $links["amorti"].".php";?>">
-									<img src="<?php echo $path; ?>images/tipoMovimiento.png" class="itemsLine"/>Ver Amortizacion
+									<img src="<?php echo $path; ?>images/tipoMovimiento.png" class="itemsLine"/>Amortizacion
 								</a>
 							</div>
 						</li>
