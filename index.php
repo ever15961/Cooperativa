@@ -13,7 +13,8 @@
 		"tipoOperacion" => "pages/listadoTipoOperacion",
 		"tipoMovimiento" => "pages/listadoTipoMovimiento",
 		"cuotas" => "pages/listadoCuotas",
-		"cerrarSesion"  => "pages/cerrar"
+		"cerrarSesion"  => "pages/cerrar",
+		"amorti"  => "pages/listadoAmortPorSocio"
 	);
 
 	if(!isset($_SESSION["user"])){?>
