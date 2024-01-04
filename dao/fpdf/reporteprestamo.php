@@ -11,13 +11,13 @@ if (isset($_SESSION["user"])) {
     include "../daoPrestamo.php";
     //include "../pages/menu/menu.php";
 
-  // Obtén el valor de 'id' desde la URL
-$idPrestamo = isset($_GET['id']) ? $_GET['id'] : null;
+    // Obtén el valor de 'id' desde la URL
+    $idPrestamo = isset($_GET['id']) ? $_GET['id'] : null;
 
-// Verifica si se proporcionó un ID válido
-if ($idPrestamo === null || !is_numeric($idPrestamo)) {
-    die('Error: ID de prestamo no válido.');
-}
+    // Verifica si se proporcionó un ID válido
+    if ($idPrestamo === null || !is_numeric($idPrestamo)) {
+        die('Error: ID de prestamo no válido.');
+    }
     $listaE = encabezado($idPrestamo);
     $listaAM = obtenerDatos($idPrestamo);
 
@@ -64,15 +64,15 @@ if ($idPrestamo === null || !is_numeric($idPrestamo)) {
     $pdf->Cell(130, 8, utf8_decode('Prestamo'), 0, 0, 'C', 0);
     $pdf->Ln(20);
 
-       // Agrega el campo de código de préstamo
-       $pdf->SetFont('Times', 'B', 15);
-       $pdf->SetX(30);
-       $pdf->Cell(100, 8, utf8_decode('Código de Préstamo: ' . $listaE[0][1]), 0, 1, 'L', 0);
+    // Agrega el campo de código de préstamo
+    $pdf->SetFont('Times', 'B', 15);
+    $pdf->SetX(30);
+    $pdf->Cell(100, 8, utf8_decode('Código de Préstamo: ' . $listaE[0][1]), 0, 1, 'L', 0);
 
-       $pdf->SetFont('Times', 'B', 15);
-       $pdf->SetX(30);
-       $pdf->Cell(100, 8, utf8_decode('Fecha del prestamo: ' . $listaE[0][10]), 0, 1, 'L', 0);
-   
+    $pdf->SetFont('Times', 'B', 15);
+    $pdf->SetX(30);
+    $pdf->Cell(100, 8, utf8_decode('Fecha del prestamo: ' . $listaE[0][10]), 0, 1, 'L', 0);
+
     $pdf->SetFont('Times', 'B', 15);
     $pdf->SetX(30);
     $pdf->Cell(100, 8, utf8_decode('Información de prestamo'), 0, 0, 'L', 0);
@@ -105,15 +105,7 @@ if ($idPrestamo === null || !is_numeric($idPrestamo)) {
     $pdf->SetFont('Helvetica', 'B', 12);
     $pdf->Cell(40, 8, 'Destino', 1, 0, 'C', 0);
     $pdf->SetFont('Times', '', 12);
-    
-    if($listaE[0][6] == "1") {
-        $destino = 'Cultivo';
-    }else if($listaE[0][6] == "2") {
-        $destino = 'Personal';
-    }else {
-        $destino = 'Financiamiento';
-    }
-   $pdf->Cell(40, 8, $destino, 1, 0, 'L', 0);
+    $pdf->Cell(40, 8, $listaE[0][6], 1, 0, 'L', 0);
 
     $pdf->Ln(10);
     $pdf->SetX(30);
@@ -134,13 +126,13 @@ if ($idPrestamo === null || !is_numeric($idPrestamo)) {
     $pdf->Ln(10);
     $pdf->SetX(30);
 
-    if($listaE[0][5] == "1") {
+    if ($listaE[0][5] == "1") {
         $periodo = "mensual";
         $frecuencia = 12;
-    }else if($listaE[0][5] == "2") {
+    } else if ($listaE[0][5] == "2") {
         $periodo = "trimestral";
         $frecuencia = 4;
-    }else {
+    } else {
         $periodo = "semestral";
         $frecuencia = 2;
     }
@@ -172,8 +164,8 @@ if ($idPrestamo === null || !is_numeric($idPrestamo)) {
     $pdf->SetFont('Helvetica', 'B', 12);
     $pdf->Cell(40, 8, 'Frecuencia', 1, 0, 'C', 0);
     $pdf->SetFont('Times', '', 12);
-  
-   $pdf->Cell(40, 8, $frecuencia, 1, 0, 'L', 0);
+
+    $pdf->Cell(40, 8, $frecuencia, 1, 0, 'L', 0);
 
     $pdf->Ln(15);
     $pdf->SetX(30);
@@ -195,28 +187,28 @@ if ($idPrestamo === null || !is_numeric($idPrestamo)) {
     $pdf->SetFont('Helvetica', '', 12);
     foreach ($listaAM as $item) {
         $fecha = DateTime::createFromFormat('Y-m-d H:i:s', $item[1]);
-            $fechaFormateada = $fecha->format('d/m/Y'); // Reemplaza 'formato_deseado' con el formato que necesitas
+        $fechaFormateada = $fecha->format('d/m/Y'); // Reemplaza 'formato_deseado' con el formato que necesitas
         $pdf->SetX(30);
         //$pdf->Cell(60,10,utf8_decode('Imprimiendo línea número ').$i,1,1);
-        if($i == 0) {
+        if ($i == 0) {
             $pdf->Cell(20, 8, utf8_decode($i), 1, 0, 'C', 1);
             $pdf->Cell(42, 8, utf8_decode(" "), 1, 0, 'C', 1);
             $pdf->Cell(42, 8, utf8_decode(" "), 1, 0, 'C', 1);
             $pdf->Cell(42, 8, utf8_decode(" "), 1, 0, 'C', 1);
             $pdf->Cell(42, 8, utf8_decode(" "), 1, 0, 'C', 1);
-            $pdf->Cell(42, 8, "$". utf8_decode($listaE[0][1]), 1, 1, 'C', 1);
-        }else {
+            $pdf->Cell(42, 8, "$" . utf8_decode($listaE[0][1]), 1, 1, 'C', 1);
+        } else {
 
-    
-            
 
-            
+
+
+
             $pdf->Cell(20, 8, utf8_decode($i), 1, 0, 'C', 1);
-            $pdf->Cell(42, 8, $fechaFormateada, 1, 0, 'C', 1); 
-            $pdf->Cell(42, 8, "$". number_format($item[2], 4), 1, 0, 'C', 1);
-            $pdf->Cell(42, 8, "$". number_format($item[3], 4), 1, 0, 'C', 1);
-            $pdf->Cell(42, 8, "$". number_format($item[4], 4), 1, 0, 'C', 1);
-            $pdf->Cell(42, 8, "$". number_format($item[6], 4), 1, 1, 'C', 1);
+            $pdf->Cell(42, 8, $fechaFormateada, 1, 0, 'C', 1);
+            $pdf->Cell(42, 8, "$" . number_format($item[2], 4), 1, 0, 'C', 1);
+            $pdf->Cell(42, 8, "$" . number_format($item[3], 4), 1, 0, 'C', 1);
+            $pdf->Cell(42, 8, "$" . number_format($item[4], 4), 1, 0, 'C', 1);
+            $pdf->Cell(42, 8, "$" . number_format($item[6], 4), 1, 1, 'C', 1);
         }
 
         $i++;

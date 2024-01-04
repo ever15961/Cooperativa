@@ -17,7 +17,7 @@
 			<div class="card col-12 mx-auto border ">
 				<div class="row pt-4 pl-2 pb-4 pr-3">
 					<div class="col-4 p-0 mh-100">
-						<img src="<?php echo $path;?>images/socios3.png" class="col-10 m-0 h-75 rounded">
+						<img src="<?php echo $path; ?>images/socios3.png" class="col-10 m-0 h-75 rounded">
 					</div>
 
 					<div class="col-8">
@@ -54,46 +54,57 @@
 									<div class="form-group">
 										<label for="socio">Socio</label>
 										<select name="socio" id="socio" class="form-control">
-										<?php
-                                                                include "../config/conexion.php";
+											<?php
+											include "../config/conexion.php";
 
-                                                                $sql = "SELECT * FROM socio order by nombre, apellido";
-                                                                $stmt = $conexion->prepare($sql);
-                                                                $stmt->execute();
-                                                                $result = $stmt->get_result();
-                                                                while ($fila = $result->fetch_assoc()) {
-                                                                        if($fila['id'] == $socio){
-                                                                            echo " <option value=".$fila['id']." selected>".$fila['nombre']." ".$fila['apellido']."</option>";
-                                                                        }else{
-                                                                            echo " <option value=".$fila['id'].">".$fila['nombre']." ".$fila['apellido']."</option>";
-                                                                        }
-                                                                        
-                                                                   }
-                                                        ?>
+											$sql = "SELECT * FROM socio order by nombre, apellido";
+											$stmt = $conexion->prepare($sql);
+											$stmt->execute();
+											$result = $stmt->get_result();
+											while ($fila = $result->fetch_assoc()) {
+												if ($fila['id'] == $socio) {
+													echo " <option value=" . $fila['id'] . " selected>" . $fila['nombre'] . " " . $fila['apellido'] . "</option>";
+												} else {
+													echo " <option value=" . $fila['id'] . ">" . $fila['nombre'] . " " . $fila['apellido'] . "</option>";
+												}
+
+											}
+											?>
 										</select>
 									</div>
 								</div>
-								
+
 							</div>
 
 							<div class="row col-12">
 								<div class="col-6">
 									<div class="form-group">
 										<label for="destino">Destino</label>
-										<select name="destino" id="destino" class="form-control">
-											<option value="1">Cultivo</option>
-											<option value="2">Personal</option>
-											<option value="3">Financiamiento</option>
+										<select name="destino" id="destino" class="form-control"
+											onchange="actualizarTasaInteres()">
+											<option value=0>Seleccione uno</option>
+											<?php
+											include "../config/conexion.php";
+
+											$sql = "SELECT * FROM interes ORDER BY destino";
+											$stmt = $conexion->prepare($sql);
+											$stmt->execute();
+											$result = $stmt->get_result();
+											while ($fila = $result->fetch_assoc()) {
+												echo "<option value=" . $fila['id'] . " data-tasainteres=" . $fila['tasaInteres'] . ">" . $fila['destino'] . "</option>";
+											}
+											?>
 										</select>
 									</div>
 								</div>
 								<div class="col-6">
 									<div class="form-group">
 										<label for="interes">Tasa de interes</label>
-										<input type="number" name="interes" id="interes" class="form-control">
+										<input type="number" name="interes" id="interes" class="form-control"
+											value="<?php echo $interes; ?>">
 									</div>
-</div>
-								
+								</div>
+
 							</div>
 							<div class="row col-12">
 								<div class="col-6">
@@ -101,14 +112,15 @@
 										<label for="fInicio">Fecha del prestamo</label>
 										<input type="date" name="fInicio" id="fInicio" class="form-control">
 									</div>
-</div>
-								
+								</div>
+
 							</div>
 
 
-								<div class="row col-12">
-									<input type="submit" value="Registrar Préstamos" class="btn btn-success active ml-3" id="btnRegistrarPrestamo">				
-								</div>
+							<div class="row col-12">
+								<input type="submit" value="Registrar Préstamos" class="btn btn-success active ml-3"
+									id="btnRegistrarPrestamo">
+							</div>
 
 						</form>
 					</div>
@@ -122,5 +134,18 @@
 		</div>
 	</div>
 </body>
+<script>
+	function actualizarTasaInteres() {
+		// Obtener el valor seleccionado en el campo de destino
+		var destinoSelect = document.getElementById("destino");
+		var selectedOption = destinoSelect.options[destinoSelect.selectedIndex];
+
+		// Obtener el valor de la tasa de interés asociado a la opción seleccionada
+		var tasaInteres = selectedOption.getAttribute("data-tasainteres");
+
+		// Actualizar el valor del campo de tasa de interés con el valor asociado
+		document.getElementById("interes").value = tasaInteres;
+	}
+</script>
 
 </html>

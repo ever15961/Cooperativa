@@ -110,13 +110,12 @@
     $i = 1;
 
     foreach ($lista as $item) {
-        $destinoColor = getDestinoColor($item[3]);
         $estadoColor = getEstadoColor($item[5]);
 
         echo "<tr>
                 <td>" . $i . "</td>
                 <td >Prestamos a " . $item[1] . " años a plazo " . getPlazoTexto($item[2]) . "</td>
-                <td style='color: $destinoColor;'>" . getDestinoTexto($item[3]) . "</td>
+                <td >". $item[3]. "</td>
                 <td>" . $item[4] . "</td>
                 <td style='color: $estadoColor;'>" . getEstadoTexto($item[5]) . "</td>
                 <td>

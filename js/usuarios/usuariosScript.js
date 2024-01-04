@@ -186,7 +186,11 @@ function modificar($id,elemento) {
     }
 
 }
-
+function verificarClave(clave) {
+    // La expresión regular requiere al menos una letra mayúscula, al menos un número y al menos un carácter especial
+    var regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).+$/;
+    return regex.test(clave);
+}
 
 //iniciar elementos html necesarios para ingreso o modificacion
 function iniciar() {
@@ -213,6 +217,8 @@ function registrarUsuario(e) {
           })
         
         }else if(document.getElementById('clave').value == document.getElementById('clave2').value){
+           if(verificarClave(document.getElementById('clave').value)){
+            
             var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
             var nIdentificacion = document.getElementById('nIdentificacion').value;
         
@@ -239,7 +245,19 @@ switch (parseInt(tipoIdentificacion)) {
 
     }
     
-    
+} else{
+    Swal.fire({
+        position: "top-end",
+        title: 'System',
+        showConfirmButton: false,
+        icon: 'error',
+        html: 'La contraseña no cumple con los requisitos:<br>' +
+              '- Al menos una letra mayúscula<br>' +
+              '- Al menos un número<br>' +
+              '- Al menos un carácter especial',
+        timer: 5000
+    });
+}
 }else{
     Swal.fire({
         position: "top-end",
@@ -267,7 +285,54 @@ switch (parseInt(tipoIdentificacion)) {
 
             if(!document.getElementById('usuario_clave_nueva_1').value == "" || !document.getElementById('usuario_clave_nueva_2').value == ""){
                 if(document.getElementById('usuario_clave_nueva_1').value== document.getElementById('usuario_clave_nueva_2').value){
-                claveNueva=true;
+                    claveNueva=true;
+                    if(claveNueva==true){
+                        if(verificarClave(document.getElementById('usuario_clave_nueva_1').value)){
+                          var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
+                          var nIdentificacion = document.getElementById('nIdentificacion').value;
+                          form.append("clavenueva",claveNueva);
+                      
+                              // Validar tipo de identificación
+                  switch (parseInt(tipoIdentificacion)) {
+                  case 1: // DUI
+                      if (isDUI(nIdentificacion)) {
+                          
+                          form.append("operacion", "editar");
+                  form.append("id",id);
+                  iniciarPeticion(form, null,e);
+                      } else {
+                          mostrarError('Formato DUI inválido');
+                      }
+                      break;
+                  case 2: // NIT
+                      if (isNIT(nIdentificacion)) {
+                              form.append("operacion", "editar");
+                      form.append("id",id);
+                      iniciarPeticion(form, null,e);
+                      } else {
+                          mostrarError('Formato NIT inválido');
+                      }
+                      break;
+                  default:
+                      mostrarError('Tipo de identificación no válido');
+                  
+                      }
+                     }else{
+                                      Swal.fire({
+                                          position: "top-end",
+                                          title: 'System',
+                                          showConfirmButton: false,
+                                          icon: 'error',
+                                          html: 'La contraseña no cumple con los requisitos:<br>' +
+                                                '- Al menos una letra mayúscula<br>' +
+                                                '- Al menos un número<br>' +
+                                                '- Al menos un carácter especial',
+                                          timer: 5000
+                                      });
+                                  }
+                              
+                      }
+                
                 }else{              
                     Swal.fire({
                     position: "top-end",
@@ -277,36 +342,41 @@ switch (parseInt(tipoIdentificacion)) {
                     text: 'Las claves no coinciden',
                     timer: 1500 
                   }) }
+            }else{
+                      var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
+                      var nIdentificacion = document.getElementById('nIdentificacion').value;
+                      form.append("clavenueva",claveNueva);
+                  
+                          // Validar tipo de identificación
+              switch (parseInt(tipoIdentificacion)) {
+              case 1: // DUI
+                  if (isDUI(nIdentificacion)) {
+                      
+                      form.append("operacion", "editar");
+              form.append("id",id);
+              iniciarPeticion(form, null,e);
+                  } else {
+                      mostrarError('Formato DUI inválido');
+                  }
+                  break;
+              case 2: // NIT
+                  if (isNIT(nIdentificacion)) {
+                          form.append("operacion", "editar");
+                  form.append("id",id);
+                  iniciarPeticion(form, null,e);
+                  } else {
+                      mostrarError('Formato NIT inválido');
+                  }
+                  break;
+              default:
+                  mostrarError('Tipo de identificación no válido');
+              
+                  }
+                             
+                          
+
             }
-                var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
-                var nIdentificacion = document.getElementById('nIdentificacion').value;
-                form.append("clavenueva",claveNueva);
-            
-                    // Validar tipo de identificación
-    switch (parseInt(tipoIdentificacion)) {
-        case 1: // DUI
-            if (isDUI(nIdentificacion)) {
-                
-                form.append("operacion", "editar");
-        form.append("id",id);
-        iniciarPeticion(form, null,e);
-            } else {
-                mostrarError('Formato DUI inválido');
-            }
-            break;
-        case 2: // NIT
-            if (isNIT(nIdentificacion)) {
-                    form.append("operacion", "editar");
-            form.append("id",id);
-            iniciarPeticion(form, null,e);
-            } else {
-                mostrarError('Formato NIT inválido');
-            }
-            break;
-        default:
-            mostrarError('Tipo de identificación no válido');
-    
-            }
+               
         }
         }
     

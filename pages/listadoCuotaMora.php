@@ -113,9 +113,7 @@ $codigos = obtenerCodigosClientes();
                     <td>$item[apellido]</td>
                     <td>$item[direccion]</td>
                     <td class='" . ($item["estadoPrestamo"] == "1" ? 'text-success' : 'text-danger') . "'>$ ".number_format($item["montoPrestamo"], 2)."</td>
-                    <td class='" . ($item["destinoPrestamo"] == "1" ? 'text-primary' : ($item["destinoPrestamo"] == "2" ? 'text-info' : 'text-warning')) . "'>" . 
-                        ($item["destinoPrestamo"] == "1" ? 'CULTIVO' : ($item["destinoPrestamo"] == "2" ? 'PERSONAL' : ($item["destinoPrestamo"] == "3" ? 'FINANCIAMIENTO' : ''))) . 
-                    "</td>
+                    <td >$item[destino]</td>
                     <td>$item[fechaInicio]</td>
                     <td class='" . ($item["estadoPrestamo"] == "1" ? 'text-success' : 'text-danger') . "'>" . ($item["estadoPrestamo"] == "1" ? 'ACTIVO' : 'INACTIVO') . "</td>
                     <td> 

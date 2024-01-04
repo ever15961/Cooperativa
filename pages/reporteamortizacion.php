@@ -93,15 +93,7 @@ if (isset($_SESSION["user"])) {
     $pdf->SetFont('Helvetica', 'B', 12);
     $pdf->Cell(40, 8, 'Destino', 1, 0, 'C', 0);
     $pdf->SetFont('Times', '', 12);
-    
-    if($listaE[0][5] == "1") {
-        $destino = 'Cultivo';
-    }else if($listaE[0][5] == "2") {
-        $destino = 'Personal';
-    }else {
-        $destino = 'Financiamiento';
-    }
-   $pdf->Cell(40, 8, $destino, 1, 0, 'L', 0);
+   $pdf->Cell(40, 8, $listaE[0][5], 1, 0, 'L', 0);
 
     $pdf->Ln(10);
     $pdf->SetX(5);

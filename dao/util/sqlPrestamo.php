@@ -13,18 +13,21 @@
 //obtener todos los prestamos
 
     define("OBTENER_TODOS_PRESTAMOS","SELECT s.nombre,
-    s.apellido,s.direccion,p.montoPrestamo,p.destinoPrestamo,p.fechaInicio,p.estadoPrestamo,p.id
+    s.apellido,s.direccion,p.montoPrestamo,p.destinoPrestamo,p.estadoPrestamo,p.fechaInicio,i.destino,p.id
     FROM
     prestamo p
     INNER JOIN
     socio s
     ON p.socio = s.id
+    INNER JOIN
+    interes i
+    ON i.id = p.estadoPrestamo
     where s.codigoSocio=?");
 
     //Guarda el prestamo
 
-    define("GUARDAR_PRESTAMOS","INSERT INTO prestamo(codigo,montoPrestamo,destinoPrestamo,tasaInteres,fechaInicio,
-    socio,plazo_anio,plazo_cuota,estadoPrestamo,amortizacion) VALUES(?,?,?,?,?,?,?,?,1,0)");
+    define("GUARDAR_PRESTAMOS","INSERT INTO prestamo(codigo,montoPrestamo,destinoPrestamo,fechaInicio,
+    socio,plazo_anio,plazo_cuota,estadoPrestamo,amortizacion) VALUES(?,?,?,?,?,?,?,1,0)");
 
     //guarda las cuotas
 
@@ -77,10 +80,12 @@
            WHERE u.usuario =? AND u.clave =?");   
            
               //seleccionar los prestamos de cada socio para su amortizacion
-    define("SELECCIONAR_PRESTAMOS_AMORTIZACION", "SELECT p.id, p.plazo_anio, p.plazo_cuota, p.destinoPrestamo, p.fechaInicio, p.estadoPrestamo
+    define("SELECCIONAR_PRESTAMOS_AMORTIZACION", "SELECT p.id, p.plazo_anio, p.plazo_cuota, i.destino, p.fechaInicio, p.estadoPrestamo
     FROM prestamo p 
     INNER JOIN 
     socio s ON s.id=p.socio
+    INNER JOIN 
+    interes i ON i.id=p.destinoPrestamo
     WHERE s.codigoSocio = ?");
 
 
@@ -96,11 +101,14 @@ define("OBTENER_CUOTAS_PAGADAS","SELECT count(*) as cuotas_pagadas FROM cuota IN
      WHERE p.id = ?
     ORDER BY c.id");
 
-define("SQL_ENCABEZADO", "SELECT p.id, p.codigo,p.montoPrestamo, p.tasaInteres, p.plazo_anio, p.plazo_cuota, p.destinoPrestamo, s.nombre, s.apellido, s.direccion,p.fechaInicio FROM prestamo p
-INNER JOIN socio s ON s.id = p.socio WHERE p.id = ?");
+define("SQL_ENCABEZADO", "SELECT p.id, p.codigo,p.montoPrestamo, i.tasaInteres, p.plazo_anio, p.plazo_cuota, i.destino, s.nombre, s.apellido, s.direccion,p.fechaInicio FROM prestamo p
+INNER JOIN socio s ON s.id = p.socio
+INNER JOIN interes i ON i.id = p.destinoPrestamo WHERE p.id = ?");
 
 define("OBTENER_CLIENTES_CODIGOS", "SELECT codigoSocio FROM socio");
 
-define("OBTENER_TODOS_PRESTAMOS_MORA","SELECT s.nombre, s.apellido, s.direccion, p.montoPrestamo, p.destinoPrestamo, p.fechaInicio, p.estadoPrestamo, p.id FROM socio s JOIN prestamo p ON s.id = p.socio JOIN cuota c 
-ON p.id = c.prestamo WHERE c.estado = 1 AND c.fechaVencimiento < CURDATE() AND p.estadoPrestamo = 1 GROUP BY p.id");
+define("OBTENER_TODOS_PRESTAMOS_MORA","SELECT s.nombre, s.apellido, s.direccion, p.montoPrestamo, i.destino, p.fechaInicio, p.estadoPrestamo, p.id FROM socio s JOIN prestamo p ON s.id = p.socio JOIN cuota c 
+ON p.id = c.prestamo
+INNER JOIN interes i
+ON i.id=p.destinoPrestamo WHERE c.estado = 1 AND c.fechaVencimiento < CURDATE() AND p.estadoPrestamo = 1 GROUP BY p.id");
 

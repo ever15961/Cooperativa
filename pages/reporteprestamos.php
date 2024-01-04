@@ -138,13 +138,7 @@ if (isset($_SESSION["user"])) {
         $pdf->Cell(20, 8, utf8_decode(" "), 1, 1, 'C', 1);
     } else {
         foreach ($listaPrestamos as $item) {
-            if($item[3] == "1") {
-                $destino = "CULTIVO";
-            }else if($item[1] == "2") {
-                $destino = "PERSONAL";
-            }else {
-                $destino = "FINANCIAMIENTO";
-            }
+
 
             $concepto = "";
             if($item[2] == "1") {
@@ -159,7 +153,7 @@ if (isset($_SESSION["user"])) {
 
             $pdf->Cell(10, 15, $contador, 1, 0, 'C', 1);
             $pdf->Cell(75, 15, "Prestamos a " . $item[1] . utf8_decode(" años a plazo ") . $concepto, 1, 0, 'C', 1);
-            $pdf->Cell(37, 15, $destino, 1, 0, 'C', 1);
+            $pdf->Cell(37, 15, $item[3], 1, 0, 'C', 1);
             $pdf->Cell(25, 15, utf8_decode($item[4]), 1, 0, 'C', 1);
             $pdf->Cell(15, 15, $item[7] . "%", 1, 0, 'C', 1);
             $pdf->Cell(20, 15, "$" . $item[6], 1, 0, 'C', 1);
