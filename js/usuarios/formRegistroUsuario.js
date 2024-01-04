@@ -1,2 +1,0 @@
-var operacion = null;
-
