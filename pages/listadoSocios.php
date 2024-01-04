@@ -61,7 +61,8 @@ $links = array(
     "tipoCuenta" => "listadoTipoCuenta",
     "tipoOperacion" => "listadoTipoOperacion",
     "tipoMovimiento" => "listadoTipoMovimiento",
-    "cerrarSesion"  => "cerrar"
+    "cerrarSesion"  => "cerrar",
+    "amorti" => "listadoAmortPorSocio"
 );
 include "../dao/daoSocio.php";
 include "../pages/menu/menu.php";
