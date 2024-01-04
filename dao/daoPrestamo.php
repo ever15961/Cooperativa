@@ -15,29 +15,107 @@ function elegirOperacion($op)
             registrarPrestamo();
         break;
 
-        case "editar" :
-                editarSocio();
-            break;
-
         case "eliminar":
-                eliminarSocio();
-            break;
-
-        case "iniciarSesion":
-                iniciarSesion();
-            break;
-
-        case "comprobarSocio":
-                comprobarSocio();
+                eliminarPrestamo();
             break;
 
             case "mostrar":
                 mostrar();
             break;
 
+        case "pagar":
+            pagar();
+            break;    
+
         default :
             break;
     }
+}
+function obtenerPrestamosPorSocios($data) {
+    include "../config/conexion.php";
+
+    $stm = $conexion->prepare(SELECCIONAR_PRESTAMOS_AMORTIZACION);
+    $stm->bind_param("s", $data);
+
+    if($stm->execute()) {
+        $result = $stm->get_result();
+
+        return $result->fetch_all();
+    }
+}
+function pagar() {
+    include "../config/conexion.php";
+
+    $id = $_POST["id"];
+    $idPrestamo = $_POST["idPrestamo"];
+
+    // Verificar la contraseña del usuario
+    $stm = $conexion->prepare(PAGAR_CUOTA);
+    $stm->bind_param("i", $id);
+
+    if (!$stm->execute()) {
+        // Error al obtener el socio, devolver respuesta de error
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "Error al pagar la cuota"]);
+    } else {
+        $listaCuota = mostrarcuotasp($idPrestamo);
+
+        // Obtener el número total de cuotas y cuotas pagadas
+        $totalCuotas = obtenerTotalCuotas($idPrestamo);
+        $cuotasPagadas = obtenerCuotasPagadas($idPrestamo);
+
+        // Si todas las cuotas han sido pagadas, actualizar el estado del préstamo
+        if ($cuotasPagadas == $totalCuotas) {
+            actualizarEstadoPrestamo($idPrestamo);
+        }
+
+        // Construye un array con el ID
+        $data = array('id' => $listaCuota);
+        header('Content-Type: application/json');
+        echo json_encode(["success" => true, "message" => "Cuota pagada con éxito"]);
+    }
+}
+
+// Función para obtener el número total de cuotas para un préstamo
+function obtenerTotalCuotas($idPrestamo) {
+    include "../config/conexion.php";
+
+    $stm = $conexion->prepare(OBTENER_TOTAL_CUOTAS);
+    $stm->bind_param("i", $idPrestamo);
+
+    if ($stm->execute()) {
+        $result = $stm->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total_cuotas'];
+    }
+
+    return 0;
+}
+
+// Función para obtener el número de cuotas pagadas para un préstamo
+function obtenerCuotasPagadas($idPrestamo) {
+    include "../config/conexion.php";
+
+    $stm = $conexion->prepare(OBTENER_CUOTAS_PAGADAS);
+    $stm->bind_param("i", $idPrestamo);
+
+    if ($stm->execute()) {
+        $result = $stm->get_result();
+        $row = $result->fetch_assoc();
+        return $row['cuotas_pagadas'];
+    }
+
+    return 0;
+}
+
+// Función para actualizar el estado del préstamo
+function actualizarEstadoPrestamo($idPrestamo) {
+    include "../config/conexion.php";
+
+    $stm = $conexion->prepare(ACTUALIZAR_ESTADO_PRESTAMO);
+    $stm->bind_param("i", $idPrestamo);
+
+    $stm->execute();
 }
 
 function mostrar(){
@@ -63,13 +141,13 @@ function mostrar(){
    }
 function registrarPrestamo(){
     include "../config/conexion.php";
-    include "util/sqlPrestamo.php";
     
     $data=obtenerParametros();
 
-    
+    // Generar un código único para el préstamo
+    $codigoUnico = obtenerCodigoPrestamo($data["socio"],$data["fechaInicio"],$data["monto"]);
     $stm = $conexion->prepare(GUARDAR_PRESTAMOS);
-    $stm->bind_param("didsiii", $data["monto"], $data["destino"],$data["tasaInteres"],$data["fechaInicio"],$data["socio"],$data["plazo_anio"],$data["plazo_cuota"]);
+    $stm->bind_param("sdidsiii",$codigoUnico, $data["monto"], $data["destino"],$data["tasaInteres"],$data["fechaInicio"],$data["socio"],$data["plazo_anio"],$data["plazo_cuota"]);
 
     if($stm->execute()){
         $stm = $conexion->query(SELECCIONAR_ULTIMO_PRESTAMO);
@@ -83,6 +161,29 @@ function registrarPrestamo(){
 
 }
 
+function obtenerCodigoPrestamo($id,$fecha, $monto)
+{
+    $completo = $id.$fecha . $monto;
+    $completo = str_replace(" ", "", $completo);
+
+    $iteracion = rand(1, 6);
+
+    $codigo = "";
+
+    for ($i = 1; $i <= 6; $i++) {
+        if ($i == $iteracion) {
+            $n = rand(0, 9);
+            $codigo .= $n;
+
+        } else {
+            $n = rand(0, strlen($fecha));
+            $codigo .= $completo[$n];
+            $completo[$n] = " ";
+            $completo = str_replace(" ","",$completo);
+        }
+    }
+    return $codigo;
+}
 function listarCuotas(){
     include "../config/conexion.php";
     $stm = $conexion->query(TODS_CUOTAS);
@@ -127,8 +228,7 @@ function mostrarcuotasp($id){
 function calcularYGuardarCuotasConFechas($idPrestamo,$montoPrestamo, $tasaInteresAnual, $plazoAnios, $frecuenciaPago, $fechaInicio) {
     // ... (código para la conexión a la base de datos)
     include "../config/conexion.php";
-    include "util/sqlPrestamo.php";
-
+try{
 
     // Convertir la fecha de inicio a objeto DateTime
     $fechaVencimiento = new DateTime($fechaInicio);
@@ -140,10 +240,13 @@ function calcularYGuardarCuotasConFechas($idPrestamo,$montoPrestamo, $tasaIntere
     $tasaInteresMensual = $tasaInteresAnual / 12 / 100;
 if($frecuenciaPago==1){
     $frecuencia="mensual";
+    $fechaVencimiento->add(new DateInterval('P1M'));
 }else if($frecuenciaPago==2){
 $frecuencia="trimestral";
+$fechaVencimiento->add(new DateInterval('P3M'));
 }else{
     $frecuencia="semestral";
+    $fechaVencimiento->add(new DateInterval('P6M'));
 }
 
 
@@ -202,148 +305,122 @@ if ($frecuencia === "trimestral") {
     } elseif ($frecuencia === "semestral" && $i % 6 === 0) {
         $fechaVencimiento->add(new DateInterval("P6M"));
     }
-    
-}}
 
-
-function comprobarSocio(){
-    include "../config/conexion.php";
-    include "util/sqlPrestamo.php";
-
-    $stm = $conexion->prepare(OBTENER_COINCIDENCIAS);
-
-    $dato = $_REQUEST["dato"];
-    
-    $stm->bind_param("sssss",$dato,$dato,$dato,$dato,$dato);
-
-    if($stm->execute()){
-        $data = $stm->get_result();
-        var_dump($data->fetch_assoc());
-    }
-
+}
+          // Devolver un mensaje al script
+          $response = ["success" => true, "message" => "Cuotas calculadas y guardadas con éxito", "idPrestamo" => $idPrestamo];  $idPrestamo;
+          header('Content-Type: application/json');
+          echo json_encode($response);
+        }catch (Exception $e) {
+            // Devolver un mensaje de error en caso de excepción
+            $response = ["success" => false, "message" => "Error en el cálculo y guardado de cuotas: " . $e->getMessage()];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+        } 
 }
 
 
-function eliminarSocio(){
-    include "../config/conexion.php";
 
-    $socio = 0;
 
-    $stm = $conexion->prepare(SELECCIONAR_SOCIO);
-    $stm->bind_param("i",$_POST["posicion"]);
+ //obtenemos los datos del prestamo a amortizar
+ function encabezado($data) {
+    include "../../config/conexion.php";
 
-    if($stm->execute()){
-        $socio = (($stm->get_result())->fetch_assoc())["id"];
+    $stm = $conexion->prepare(SQL_ENCABEZADO);
+    $stm->bind_param("i", $data);
+
+    if($stm->execute()) {
+        $result = $stm->get_result();
+        return $result->fetch_all();
     }
-    
-    $stm = $conexion->prepare(ELIMINAR_SOCIO);
-    $stm->bind_param("i",$socio);
-
-    if($stm->execute()){
-        echo json_encode("Socio eliminado correctamente!");
-        return;
-    }
-    echo json_encode();
 }
 
+function obtenerDatos($prestamo) {
+    include "../../config/conexion.php";
 
+    $stm = $conexion->prepare(SELECCIONAR_PRESTAMO);
+    $stm->bind_param("i", $prestamo);
+
+    if($stm->execute()) {
+        $result = $stm->get_result();
+        return $result->fetch_all();
+    }
+}
+//obtener codigo de clientes
+function obtenerCodigosClientes()
+{
+    include "../config/conexion.php";
+    try {
+
+        $stm = $conexion->prepare(OBTENER_CLIENTES_CODIGOS);
+        if ($stm->execute()) {
+            return $stm->get_result();
+        }
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
 
 //función para obtener lista de socios
-function listarPrestamos(){
+function listarPrestamos($cod){
     include "../config/conexion.php";
-    $stm = $conexion->query(OBTENER_TODOS_PRESTAMOS);
-    if($stm){
-        return $stm->fetch_all();
+    $stm = $conexion->prepare(OBTENER_TODOS_PRESTAMOS);
+    $stm->bind_param("s", $cod);
+
+    if($stm->execute()) {
+        $result = $stm->get_result();
+
+        // Utiliza un bucle para obtener los resultados
+        $results = array();
+        while ($row = $result->fetch_assoc()) {
+            $results[] = $row;
+        }
+
+        return $results;
+    } else {
+        // Manejar el error si la ejecución falla
+        return null;
     }
-    return null;
 }
 
-
-
-function editarSocio(){
+function eliminarPrestamo(){
     include "../config/conexion.php";
-
-    $posicion = $_POST["posicion"];
-
-    $socio = 0;
-    $identificacion = 0;
-
-    $data = obtenerParametros();
-
-    $stm = $conexion->prepare(OBTENER_CLAVES_PRIMARIAS);
-    $stm->bind_param("i",$_POST["posicion"]);
-
-    if($stm->execute()){
-       $result = $stm->get_result();
-       $array  = $result->fetch_assoc();
-
-       $socio = $array["socio"];
-       $identificacion = $array["identificacion"];
+    session_start();
+    if (!isset($_SESSION["user"])) {
+        // No hay usuario autenticado, devolver respuesta de error
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "No se ha iniciado sesión"]);
+        return;
     }
 
-    $stm = $conexion->prepare(ACTUALIZAR_SOCIO);
-    $stm->bind_param("ssssi",$data["nombre"],$data["apellido"],$data["direccion"],$data["telefono"],$socio);
+    $user = $_SESSION["user"];
+    $id = $_POST["posicion"];
+    $pass = $encriptar($_POST["pass"]); // Asegúrate de que $encriptar está definido y funciona correctamente
 
-    if($stm->execute()){
-        echo json_encode("Modificado con exito");
-    }
+    // Verificar la contraseña del usuario
+    $stm = $conexion->prepare(COMPROBAR_USUARIOEMP);
+    $stm->bind_param("ss", $user, $pass);
 
-    $stm = $conexion->prepare(ACTUALIZAR_IDENTIFICACION);
-    $stm->bind_param("ssi",$data["nIdentificacion"],$data["tIdentificacion"],$identificacion);
+    if (!$stm->execute() || $stm->fetch() === null) {
+        // La contraseña no es válida, devolver respuesta de error
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "Contraseña incorrecta"]);
+    } else { // Cerrar el conjunto de resultados del primer uso
+        $stm->close();
 
-    if($stm->execute()){
-        echo json_encode("Modificado con exito");
-    }
-    
-}
+        $stm = $conexion->prepare(ELIMINAR_PRESTAMO);
+        $stm->bind_param("i", $id);
 
-//función que ingresa el socio a la bd
-function ingresarSocio()
-{
-    //incluyendo la conexion a bd
-    include "../config/conexion.php";
-
-    //obtener parametros de formulario
-    $data = obtenerParametros();
-
-    #ingresando data a bd
-
-    //ingresar usuario
-    $idUsuario = 0;
-
-    $stm = $conexion->prepare(INGRESAR_USUARIO);
-    $stm->bind_param("ss",$data["usuario"],$data["clave"]);
-
-    if($stm->execute()){
-        $stm = $conexion->query(SELECCIONAR_ULTIMO_USUARIO);
-        if($stm){
-            $data["idUsuario"] = $stm->fetch_row()[0];
+        if ($stm->execute()) {
+            // Éxito al eliminar usuario
+            header('Content-Type: application/json');
+            echo json_encode(["success" => true, "message" => "Prestamo eliminado correctamente"]);
+        } else {
+            // Error al ejecutar la consulta
+            header('Content-Type: application/json');
+            echo json_encode(["success" => false, "message" => "Error al eliminar el prestamo"]);
         }
     }
-
-    #ingresar identificacion
-    $idIdentificacion = 0;
-    $stm = $conexion->prepare(INGRESAR_IDENTIFICACION);
-    $stm->bind_param("si",$data["nIdentificacion"],$data["tIdentificacion"]);
-    if($stm->execute()){
-        $stm = $conexion->query(SELECCIONAR_ULTIMA_IDENTIFICACION);
-        if($stm){
-            $data["nIdentificacion"] = $stm->fetch_row()[0];
-        }
-    }
-  
-
-    $vacio = "";
-    #ingresando socio 
-    $stm = $conexion->prepare(INGRESAR_SOCIO);
-   
-        $stm->bind_param("ssisssi",$data["nombre"],$data["apellido"],$data["nIdentificacion"],
-                               $data["direccion"],$data["telefono"],$vacio,$data["idUsuario"]);
-
-    if($stm->execute()){
-        echo json_encode("Registro ingresado!");
-    }
-
 }
 
 //obtiene parametros de formulario mediante POST
@@ -359,48 +436,3 @@ function obtenerParametros(){
                 );
 }
 
-
-//constantes de setencias sql
-/*function crearConstantes(){
-    //ingresar usuario
-    define("INGRESAR_USUARIO","INSERT INTO usuario(usuario,clave,rol) VALUES(?,?,3)");
-
-    //ingresar socio
-    define("INGRESAR_SOCIO",
-    "INSERT INTO socio(nombre,apellido,identificacion,direccion,telefono,codigoSocio,usuario)
-     VALUES(?,?,?,?,?,?,?)");
-
-    //ingresar nuevo numero de identificacion
-    define("INGRESAR_IDENTIFICACION","INSERT INTO identificacion(numero,tipoIdentificacion)
-            VALUES(?,?)");
-
-    //obtener usuario recien creado
-    define("SELECCIONAR_ULTIMO_USUARIO","SELECT MAX(id) FROM usuario");
-
-    //obtener id de identificación recien creada
-    define("SELECCIONAR_ULTIMA_IDENTIFICACION","SELECT MAX(id) FROM identificacion");
-
-    //listando socios
-    define("SELECCIONAR_TOODS_SOCIOS","SELECT nombre,apellido,i.numero, direccion, telefono,ti.tipo
-                                       FROM socio s
-                                       INNER JOIN identificacion i
-                                       ON i.id = s.identificacion
-                                       INNER JOIN tipoIdentificacion ti
-                                       ON ti.id = i.tipoIdentificacion");
-
-    //obtener claves primarias
-    define("OBTENER_CLAVES_PRIMARIAS","SELECT s.id socio ,i.id identificacion FROM socio s
-                                       INNER JOIN identificacion i 
-                                       ON i.id = s.identificacion
-                                       LIMIT ?,1;");
-
-   //actualizar socio
-    define("ACTUALIZAR_SOCIO","UPDATE FROM socio SET nombre=?,apellido=?,direccion=?,telefono=? WHERE id=?");
-
-    //actualizar identificacion
-    define("ATUALIZAR_IDENTIFICACION","UPDATE FROM identificacion SET numero,tipoIdentificacion=? WHERE id=?");
-    
-    //eliminar socio
-    define("ELIMINAR_SOCIO","DELETE FROM socio WHERE id = (SELECT id FROM socio LIMIT ?,1)");
-
-}*/

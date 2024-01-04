@@ -1,7 +1,5 @@
 <?php 
 
-include "util/sqlCuotas.php";
-
 //parametro de operacion a realizar
 $op = isset($_REQUEST["operacion"]) ? $_REQUEST["operacion"] : "";
 
@@ -11,267 +9,206 @@ elegirOperacion($op);
 //verificar el tipo de operación a realizar (ingresar,modificar,entre otros)
 function elegirOperacion($op)
 {
+
     switch ($op) {
-        case "ingresar":
-            ingresarSocio();
-        break;
-
-        case "editar" :
-                editarSocio();
+        case "obtenerCuotas":
+            obtenerCuotas();
+            break;
+        case "obtenerIdCuota":
+            obtenerIdCuota($_POST["codigo"], $_POST["numCuota"]);
             break;
 
-        case "eliminar":
-                eliminarSocio();
-            break;
-
-        case "iniciarSesion":
-                iniciarSesion();
-            break;
-
-        case "comprobarSocio":
-                comprobarSocio();
-            break;
-
-        default :
+        default:
             break;
     }
+
 }
 
-function comprobarSocio(){
+
+
+//función para obtener lista de socios
+function listarCuotasMes()
+{
+    include "../config/conexion.php";
+    $stm = $conexion->query(TODS_CUOTAS_MES);
+    $stm->bind_param("s", $_POST["mes"]);
+    if ($stm) {
+        return $stm->fetch_all();
+    }
+    return null;
+}
+
+//función para obtener lista de socios
+function listarCuotas()
+{
+    include "../config/conexion.php";
+    $stm = $conexion->query(TODS_CUOTAS);
+    if ($stm) {
+        return $stm->fetch_all();
+    }
+    return null;
+}
+
+function comprobarCodigoPrestamo()
+{
+    if (!isset($_POST["codigo"])) {
+        return false;
+    }
+    return true;
+}
+function obtenerCuotas()
+{
     include "../config/conexion.php";
     include "util/sqlCuotas.php";
 
-    $stm = $conexion->prepare(OBTENER_COINCIDENCIAS);
+    if (comprobarCodigoPrestamo()) {
 
-    $dato = $_REQUEST["dato"];
-    
-    $stm->bind_param("sssss",$dato,$dato,$dato,$dato,$dato);
+        $codigo = $_POST["codigo"];
 
-    if($stm->execute()){
-        $data = $stm->get_result();
-        var_dump($data->fetch_assoc());
+        $stm = $conexion->prepare(OBTENER_DETALLE_PRESTAMO);
+
+        $stm->bind_param("s", $codigo);
+
+        $datos = array();
+
+        if ($stm->execute()) {
+            $data = $stm->get_result();
+
+            if ($row = $data->fetch_assoc()) {
+                array_push($datos, array(
+                    "codigo" => $codigo,
+                    "nombre" => $row["nombre"],
+                    "monto" => $row["monto"],
+                    "destino" => $row["destino"],
+                    "plazo" => $row["plazo"]
+                ));
+            }
+
+
+            $stm = $conexion->prepare(OBTENER_CUOTAS_PRESTAMO);
+            $stm->bind_param("s", $codigo);
+            $cuotas = array();
+            if ($stm->execute()) {
+
+                $data = $stm->get_result();
+                while ($row = $data->fetch_assoc()) {
+                    array_push($cuotas, array(
+                        "id" => $row["id"],
+                        "numCuota" => $row["numeroCuota"],
+                        "montoCuota" => $row["montoCuota"],
+                        "fechavencimiento" => $row["fechavencimiento"],
+                        "estado" => $row["estado"]
+                    ));
+                }
+            }
+
+            array_push($datos, $cuotas);
+
+            echo json_encode($datos);
+
+            return null;
+        }
+        echo json_encode($datos);
+
+
     }
+    echo json_encode(array("respuesta" => 0));
 
 }
 
-function iniciarSesion(){
-    include "../config/conexion.php";
-    include "../dao/util/sqlUsuario.php";
-
-    //session_start();
-
-    $username = $_REQUEST["username"];
-    $password = $_REQUEST["clave"];
-
-    
-    $stm = $conexion->prepare(COMPROBAR_USUARIO);
-    $stm->bind_param("ss",$username,$password);
-
-    if($stm->execute()){
-        $data = $stm->get_result();
-        
-        $data = $data->fetch_assoc();
-
-        session_start();
-
-        $_SESSION["user"] = $data["nombre"];
-
-    }
-    
-}
-
-
-
-
-function eliminarSocio(){
-    include "../config/conexion.php";
-
-    $socio = 0;
-
-    $stm = $conexion->prepare(SELECCIONAR_SOCIO);
-    $stm->bind_param("i",$_POST["posicion"]);
-
-    if($stm->execute()){
-        $socio = (($stm->get_result())->fetch_assoc())["id"];
-    }
-    
-    $stm = $conexion->prepare(ELIMINAR_SOCIO);
-    $stm->bind_param("i",$socio);
-
-    if($stm->execute()){
-        echo json_encode("Socio eliminado correctamente!");
-        return;
-    }
-    echo json_encode();
-}
-
-
-
-//función para obtener lista de socios
-function listarCuotasMes(){
-    include "../config/conexion.php";
-    $stm = $conexion->query(TODS_CUOTAS_MES);
-    $stm->bind_param("s",$_POST["mes"]);
-    if($stm){
-        return $stm->fetch_all();
-    }
-    return null;
-}
-
-//función para obtener lista de socios
-function listarCuotas(){
-    include "../config/conexion.php";
-    $stm = $conexion->query(TODS_CUOTAS);
-    if($stm){
-        return $stm->fetch_all();
-    }
-    return null;
-}
-
-
-
-function editarSocio(){
-    include "../config/conexion.php";
-
-    $posicion = $_POST["posicion"];
-
-    $socio = 0;
-    $identificacion = 0;
-
-    $data = obtenerParametros();
-
-    $stm = $conexion->prepare(OBTENER_CLAVES_PRIMARIAS);
-    $stm->bind_param("i",$_POST["posicion"]);
-
-    if($stm->execute()){
-       $result = $stm->get_result();
-       $array  = $result->fetch_assoc();
-
-       $socio = $array["socio"];
-       $identificacion = $array["identificacion"];
-    }
-
-    $stm = $conexion->prepare(ACTUALIZAR_SOCIO);
-    $stm->bind_param("ssssi",$data["nombre"],$data["apellido"],$data["direccion"],$data["telefono"],$socio);
-
-    if($stm->execute()){
-        echo json_encode("Modificado con exito");
-    }
-
-    $stm = $conexion->prepare(ACTUALIZAR_IDENTIFICACION);
-    $stm->bind_param("ssi",$data["nIdentificacion"],$data["tIdentificacion"],$identificacion);
-
-    if($stm->execute()){
-        echo json_encode("Modificado con exito");
-    }
-    
-}
-
-//función que ingresa el socio a la bd
-function ingresarSocio()
+//obtener codigo de prestamos
+function obtenerCodigosPrestamos()
 {
-    //incluyendo la conexion a bd
+    global $conexion;
+    try {
+
+        $stm = $conexion->prepare(OBTENER_PRESTAMOS_CODIGOS);
+        if ($stm->execute()) {
+            return $stm->get_result();
+        }
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+
+//Pagar cuota
+function obtenerIdCuota($codigo, $numCuota)
+{
+    include "../config/conexion.php";
+    include "../dao/util/sqlCuotas.php";
+
+    $id = 0;
+
+    try {
+
+        $stm = $conexion->prepare(SELECCIONAR_CUOTA);
+        $stm->bind_param("si", $codigo, $numCuota);
+
+        if ($stm->execute()) {
+            $stm2 = $stm->get_result();
+            if ($row = $stm2->fetch_assoc()) {
+                $id = $row["id"];
+                $code = $row["codigo"];
+            }
+
+            $stm = $conexion->prepare(ACTUALIZAR_CUOTA);
+            $stm->bind_param("i",$id);
+            if($stm->execute()){
+                $totalCuotas = obtenerTotalCuotas($code);
+                $cuotasPagadas = obtenerCuotasPagadas($code);
+                if ($cuotasPagadas == $totalCuotas) {
+                    actualizarEstadoPrestamo($code);
+                }
+                echo json_encode(array("respuesta" => 0, "id" => $id));
+                return null;
+            }
+
+        }
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+// Función para obtener el número total de cuotas para un préstamo
+function obtenerTotalCuotas($idPrestamo) {
     include "../config/conexion.php";
 
-    //obtener parametros de formulario
-    $data = obtenerParametros();
+    $stm = $conexion->prepare(OBTENER_TOTAL_CUOTAS);
+    $stm->bind_param("i", $idPrestamo);
 
-    #ingresando data a bd
-
-    //ingresar usuario
-    $idUsuario = 0;
-
-    $stm = $conexion->prepare(INGRESAR_USUARIO);
-    $stm->bind_param("ss",$data["usuario"],$data["clave"]);
-
-    if($stm->execute()){
-        $stm = $conexion->query(SELECCIONAR_ULTIMO_USUARIO);
-        if($stm){
-            $data["idUsuario"] = $stm->fetch_row()[0];
-        }
+    if ($stm->execute()) {
+        $result = $stm->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total_cuotas'];
     }
 
-    #ingresar identificacion
-    $idIdentificacion = 0;
-    $stm = $conexion->prepare(INGRESAR_IDENTIFICACION);
-    $stm->bind_param("si",$data["nIdentificacion"],$data["tIdentificacion"]);
-    if($stm->execute()){
-        $stm = $conexion->query(SELECCIONAR_ULTIMA_IDENTIFICACION);
-        if($stm){
-            $data["nIdentificacion"] = $stm->fetch_row()[0];
-        }
-    }
-  
-
-    $vacio = "";
-    #ingresando socio 
-    $stm = $conexion->prepare(INGRESAR_SOCIO);
-   
-        $stm->bind_param("ssisssi",$data["nombre"],$data["apellido"],$data["nIdentificacion"],
-                               $data["direccion"],$data["telefono"],$vacio,$data["idUsuario"]);
-
-    if($stm->execute()){
-        echo json_encode("Registro ingresado!");
-    }
-
+    return 0;
 }
 
-//obtiene parametros de formulario mediante POST
-function obtenerParametros(){
-    return array(
-                    "nombre"          =>  $_POST["nombres"],
-                    "apellido"        =>  $_POST["apellidos"],
-                    "direccion"       =>  $_POST["direccion"],
-                    "telefono"        =>  $_POST["telefono"],
-                    "tIdentificacion" =>  $_POST["tipoIdentificacion"],
-                    "nIdentificacion" =>  $_POST["nIdentificacion"],
-                    "usuario"         =>  $_POST["usuario"],
-                    "clave"           =>  $_POST["clave"]
-                );
+// Función para obtener el número de cuotas pagadas para un préstamo
+function obtenerCuotasPagadas($idPrestamo) {
+    include "../config/conexion.php";
+
+    $stm = $conexion->prepare(OBTENER_CUOTAS_PAGADAS);
+    $stm->bind_param("i", $idPrestamo);
+
+    if ($stm->execute()) {
+        $result = $stm->get_result();
+        $row = $result->fetch_assoc();
+        return $row['cuotas_pagadas'];
+    }
+
+    return 0;
 }
 
+// Función para actualizar el estado del préstamo
+function actualizarEstadoPrestamo($idPrestamo) {
+    include "../config/conexion.php";
 
-//constantes de setencias sql
-/*function crearConstantes(){
-    //ingresar usuario
-    define("INGRESAR_USUARIO","INSERT INTO usuario(usuario,clave,rol) VALUES(?,?,3)");
+    $stm = $conexion->prepare(ACTUALIZAR_ESTADO_PRESTAMO);
+    $stm->bind_param("i", $idPrestamo);
 
-    //ingresar socio
-    define("INGRESAR_SOCIO",
-    "INSERT INTO socio(nombre,apellido,identificacion,direccion,telefono,codigoSocio,usuario)
-     VALUES(?,?,?,?,?,?,?)");
+    $stm->execute();
+}
+?>
 
-    //ingresar nuevo numero de identificacion
-    define("INGRESAR_IDENTIFICACION","INSERT INTO identificacion(numero,tipoIdentificacion)
-            VALUES(?,?)");
-
-    //obtener usuario recien creado
-    define("SELECCIONAR_ULTIMO_USUARIO","SELECT MAX(id) FROM usuario");
-
-    //obtener id de identificación recien creada
-    define("SELECCIONAR_ULTIMA_IDENTIFICACION","SELECT MAX(id) FROM identificacion");
-
-    //listando socios
-    define("SELECCIONAR_TOODS_SOCIOS","SELECT nombre,apellido,i.numero, direccion, telefono,ti.tipo
-                                       FROM socio s
-                                       INNER JOIN identificacion i
-                                       ON i.id = s.identificacion
-                                       INNER JOIN tipoIdentificacion ti
-                                       ON ti.id = i.tipoIdentificacion");
-
-    //obtener claves primarias
-    define("OBTENER_CLAVES_PRIMARIAS","SELECT s.id socio ,i.id identificacion FROM socio s
-                                       INNER JOIN identificacion i 
-                                       ON i.id = s.identificacion
-                                       LIMIT ?,1;");
-
-   //actualizar socio
-    define("ACTUALIZAR_SOCIO","UPDATE FROM socio SET nombre=?,apellido=?,direccion=?,telefono=? WHERE id=?");
-
-    //actualizar identificacion
-    define("ATUALIZAR_IDENTIFICACION","UPDATE FROM identificacion SET numero,tipoIdentificacion=? WHERE id=?");
-    
-    //eliminar socio
-    define("ELIMINAR_SOCIO","DELETE FROM socio WHERE id = (SELECT id FROM socio LIMIT ?,1)");
-
-}*/
