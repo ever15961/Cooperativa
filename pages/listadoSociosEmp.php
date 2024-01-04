@@ -29,6 +29,7 @@
     <script src="../js/sweetalert/sweetalert2.all.min.js"></script>
 
     <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>  
 </head>
 
 
@@ -43,12 +44,6 @@ if (isset($_SESSION["user"])) {
     $nombreUsuario = $_SESSION["user"];
     $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
-    // Verifica el rol y redirige si es necesario
-    if ($rolUsuario === "Admin") {
-        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-        header("Location: ../index.php");
-        exit();
-    }
 $url = "../";
 $links = array(
     "movimientos" => "listadoPrestamos",
@@ -59,8 +54,7 @@ $links = array(
     "tipoCuenta" => "listadoTipoCuenta",
     "tipoOperacion" => "listadoTipoOperacion",
     "tipoMovimiento" => "listadoTipoMovimiento",
-    "cerrarSesion"  => "cerrar",
-    "amorti" => "listadoAmortPorSocio"
+    "cerrarSesion"  => "cerrar"
 );
 include "../dao/daoSocio.php";
 include "../pages/menu/menu.php";
@@ -104,14 +98,20 @@ $lista = listarSocios();
                                 
                                 <td> 
                                 <div class='dropdown'>
-                                <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>
-                                    <i class='bi bi-sliders'></i>
+                                <button type='button' class='btn btn-primary dropdown-toggle' data-bs-toggle='dropdown'>
+                                    <i class='fas fa-sliders-h'></i>
                                 </button>
                                 <div class='dropdown-menu'>
-                                    <a class='dropdown-item editar' data-toggle='modal' data-target='#modalRegistroSocio' onclick='modificar($item[6],this)'>
-                                        <i class='bi bi-pen'></i>Editar
+                                <a class='dropdown-item editar' data-toggle='modal' data-target='#modalRegistroSocio' onclick='modificar($item[6],this)'>
+                                    <i class='bi bi-pen'></i>Editar
+                                </a>
+                                    <a class='dropdown-item text-primary' href='#' onclick=abrirReporte('$item[3]')>
+                                        <i class='fas fa-eye'></i> Prestamos
                                     </a>
-
+                                    <a class='dropdown-item text-secundary' href='#' onclick=abrirReportep('$item[3]')>
+                                    <i class='fas fa-eye'></i> Prestamos pendientes
+                                </a>
+                               
                                 </div>
                             </div>
                                 </td>";
@@ -150,5 +150,15 @@ $lista = listarSocios();
 <?php
 }
 ?>
+<script>
+    function abrirReporte($id) {
+        var url = 'reportePrestamos.php?id=' + encodeURIComponent($id);
+        window.open(url, '_blank');
+    }
+    function abrirReportep($id) {
+        var url = 'reportePrestamosPendientes.php?id=' + encodeURIComponent($id);
+        window.open(url, '_blank');
+    }
+</script>
 </body>
 </html>
