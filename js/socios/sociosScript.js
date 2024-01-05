@@ -1,6 +1,6 @@
 var operacion = "ingresar";
-var id=0;
-var pass="";
+var id = 0;
+var pass = "";
 
 //cargar complementos
 $(document).ready(function () {
@@ -44,10 +44,10 @@ function eliminar($id) {
         {
             type: "question",
             title: "Pregunta",
-            custom_class:"myclass",
+            custom_class: "myclass",
             onClose: function (caption) {
                 if (caption.toLowerCase() == "ok") {
-                   
+
                     procesarEliminado($id);
                 }
             }
@@ -136,10 +136,10 @@ function procesarEliminado(row) {
 }
 
 //setear valores de tabla en formulario
-function modificar($id,elemento) {
+function modificar($id, elemento) {
 
     operacion = "editar";
-    id=$id;
+    id = $id;
     var tr = elemento.closest("tr");
     var collTd = tr.children;
 
@@ -173,7 +173,7 @@ function modificar($id,elemento) {
 //iniciar elementos html necesarios para ingreso o modificacion
 function iniciar() {
     document.querySelector("#btnRegistrarSocio").addEventListener("click", registrarSocio);
-    document.querySelector("#btnCerrarSocio").addEventListener("click",cerrarModal);
+    document.querySelector("#btnCerrarSocio").addEventListener("click", cerrarModal);
 }
 
 //función que envia formulario de registro socio
@@ -182,138 +182,159 @@ function registrarSocio(e) {
     var form = new FormData(this.parentNode.parentNode);
 
     if (operacion == "ingresar") {
-        if(document.getElementById('nombres').value == "" || document.getElementById('apellidos').value == ""
-        || document.getElementById('direccion').value == "" || document.getElementById('telefono').value == ""
-        || document.getElementById('nIdentificacion').value == "" || document.getElementById('usuario').value == ""
-        || document.getElementById('clave').value == "" || document.getElementById('tipoIdentificacion').value == "0"){
+        if (document.getElementById('nombres').value == "" || document.getElementById('apellidos').value == ""
+            || document.getElementById('direccion').value == "" || document.getElementById('telefono').value == ""
+            || document.getElementById('nIdentificacion').value == "" || document.getElementById('usuario').value == ""
+            || document.getElementById('clave').value == "" || document.getElementById('tipoIdentificacion').value == "0") {
             Swal.fire({
                 position: "top-end",
                 title: 'System',
                 showConfirmButton: false,
                 icon: 'error',
                 text: 'No has llenado todos los campos',
-                timer: 1500 
-              })
-            
-            }else {
+                timer: 1500
+            })
+
+        } else {
+            if (verificarClave(document.getElementById('clave').value)) {
                 var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
                 var nIdentificacion = document.getElementById('nIdentificacion').value;
                 var numero = document.getElementById('telefono').value;
-                    // Validar tipo de identificación
-    switch (parseInt(tipoIdentificacion)) {
-        case 1: // DUI
-            if (isDUI(nIdentificacion)) {
-                if(verificarTelefono(numero)){
-                    form.append("operacion", "ingresar");
-            form.append("id",id);
-            iniciarPeticion(form, null,e);
-                    }else{
-                        mostrarError('Formato telefono invalido');
-                    }
+                // Validar tipo de identificación
+                switch (parseInt(tipoIdentificacion)) {
+                    case 1: // DUI
+                        if (isDUI(nIdentificacion)) {
+                            if (verificarTelefono(numero)) {
+                                form.append("operacion", "ingresar");
+                                form.append("id", id);
+                                iniciarPeticion(form, null, e);
+                            } else {
+                                mostrarError('Formato telefono invalido');
+                            }
+                        } else {
+                            mostrarError('Formato DUI inválido');
+                        }
+                        break;
+                    case 2: // NIT
+                        if (isNIT(nIdentificacion)) {
+                            if (verificarTelefono(numero)) {
+                                form.append("operacion", "ingresar");
+                                form.append("id", id);
+                                iniciarPeticion(form, null, e);
+                            } else {
+                                mostrarError('Formato telefono invalido');
+                            }
+                        } else {
+                            mostrarError('Formato NIT inválido');
+                        }
+                        break;
+                    case 3: // Pasaporte salvadoreño
+                        if (isSalvadoranPassportValid(nIdentificacion)) {
+                            if (verificarTelefono(numero)) {
+                                form.append("operacion", "ingresar");
+                                form.append("id", id);
+                                iniciarPeticion(form, null, e);
+                            } else {
+                                mostrarError('Formato telefono invalido');
+                            }
+                        } else {
+                            mostrarError('Formato Pasaporte inválido');
+                        }
+                        break;
+                    default:
+                        mostrarError('Tipo de identificación no válido');
+                }
+
             } else {
-                mostrarError('Formato DUI inválido');
+                Swal.fire({
+                    position: "top-end",
+                    title: 'System',
+                    showConfirmButton: false,
+                    icon: 'error',
+                    html: 'La contraseña no cumple con los requisitos:<br>' +
+                        '- Al menos una letra mayúscula<br>' +
+                        '- Al menos un número<br>' +
+                        '- Al menos un carácter especial',
+                    timer: 5000
+                });
             }
-            break;
-        case 2: // NIT
-            if (isNIT(nIdentificacion)) {
-                if(verificarTelefono(numero)){
-                    form.append("operacion", "ingresar");
-            form.append("id",id);
-            iniciarPeticion(form, null,e);
-                    }else{
-                        mostrarError('Formato telefono invalido');
-                    }
-            } else {
-                mostrarError('Formato NIT inválido');
-            }
-            break;
-        case 3: // Pasaporte salvadoreño
-            if (isSalvadoranPassportValid(nIdentificacion)) {
-                if(verificarTelefono(numero)){
-                    form.append("operacion", "ingresar");
-            form.append("id",id);
-            iniciarPeticion(form, null,e);
-                    }else{
-                        mostrarError('Formato telefono invalido');
-                    }
-            } else {
-                mostrarError('Formato Pasaporte inválido');
-            }
-            break;
-        default:
-            mostrarError('Tipo de identificación no válido');
-    }
+
 
         }
-        
-        
-
     } else {
-        if(document.getElementById('nombres').value == "" || document.getElementById('apellidos').value == ""
-        || document.getElementById('direccion').value == "" || document.getElementById('telefono').value == ""
-        || document.getElementById('nIdentificacion').value == "" || document.getElementById('tipoIdentificacion').value == "0"){
+        if (document.getElementById('nombres').value == "" || document.getElementById('apellidos').value == ""
+            || document.getElementById('direccion').value == "" || document.getElementById('telefono').value == ""
+            || document.getElementById('nIdentificacion').value == "" || document.getElementById('tipoIdentificacion').value == "0") {
             Swal.fire({
                 position: "top-end",
                 title: 'System',
                 showConfirmButton: false,
                 icon: 'error',
                 text: 'No has llenado todos los campos',
-                timer: 1500 
-              })
-            
-            }else{
-                var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
-                var nIdentificacion = document.getElementById('nIdentificacion').value;
-                var numero = document.getElementById('telefono').value;
-            
-                    // Validar tipo de identificación
-    switch (parseInt(tipoIdentificacion)) {
-        case 1: // DUI
-            if (isDUI(nIdentificacion)) {
-                if(verificarTelefono(numero)){
-                form.append("operacion", "editar");
-        form.append("id",id);
-        iniciarPeticion(form, null,e);
-                }else{
-                    mostrarError('Formato telefono invalido');
-                }
-            } else {
-                mostrarError('Formato DUI inválido');
-            }
-            break;
-        case 2: // NIT
-            if (isNIT(nIdentificacion)) {
-                if(verificarTelefono(numero)){
-                    form.append("operacion", "editar");
-            form.append("id",id);
-            iniciarPeticion(form, null,e);
-                    }else{
-                        mostrarError('Formato telefono invalido');
-                    }
-            } else {
-                mostrarError('Formato NIT inválido');
-            }
-            break;
-        case 3: // Pasaporte salvadoreño
-            if (isSalvadoranPassportValid(nIdentificacion)) {
-                if(verificarTelefono(numero)){
-                    form.append("operacion", "editar");
-            form.append("id",id);
-            iniciarPeticion(form, null,e);
-                    }else{
-                        mostrarError('Formato telefono invalido');
-                    }
-            } else {
-                mostrarError('Formato Pasaporte inválido');
-            }
-            break;
-        default:
-            mostrarError('Tipo de identificación no válido');
-    }
-    }}
+                timer: 1500
+            })
 
-    
+        } else {
+            var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
+            var nIdentificacion = document.getElementById('nIdentificacion').value;
+            var numero = document.getElementById('telefono').value;
+
+            // Validar tipo de identificación
+            switch (parseInt(tipoIdentificacion)) {
+                case 1: // DUI
+                    if (isDUI(nIdentificacion)) {
+                        if (verificarTelefono(numero)) {
+                            form.append("operacion", "editar");
+                            form.append("id", id);
+                            iniciarPeticion(form, null, e);
+                        } else {
+                            mostrarError('Formato telefono invalido');
+                        }
+                    } else {
+                        mostrarError('Formato DUI inválido');
+                    }
+                    break;
+                case 2: // NIT
+                    if (isNIT(nIdentificacion)) {
+                        if (verificarTelefono(numero)) {
+                            form.append("operacion", "editar");
+                            form.append("id", id);
+                            iniciarPeticion(form, null, e);
+                        } else {
+                            mostrarError('Formato telefono invalido');
+                        }
+                    } else {
+                        mostrarError('Formato NIT inválido');
+                    }
+                    break;
+                case 3: // Pasaporte salvadoreño
+                    if (isSalvadoranPassportValid(nIdentificacion)) {
+                        if (verificarTelefono(numero)) {
+                            form.append("operacion", "editar");
+                            form.append("id", id);
+                            iniciarPeticion(form, null, e);
+                        } else {
+                            mostrarError('Formato telefono invalido');
+                        }
+                    } else {
+                        mostrarError('Formato Pasaporte inválido');
+                    }
+                    break;
+                default:
+                    mostrarError('Tipo de identificación no válido');
+            }
+        }
+    }
+
+
 }
+
+function verificarClave(clave) {
+    // La expresión regular requiere al menos una letra mayúscula, al menos un número y al menos un carácter especial
+    var regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).+$/;
+    return regex.test(clave);
+}
+
 
 //iniciar petición con API fetch 
 function iniciarPeticion(data, fn, event) {
@@ -445,15 +466,15 @@ function iniciarPeticion(data, fn, event) {
         });
     }
 }
-   // Función para mostrar mensajes de error
-   function mostrarError(mensaje) {
+// Función para mostrar mensajes de error
+function mostrarError(mensaje) {
     Swal.fire({
         position: "top-end",
         title: 'System',
         showConfirmButton: false,
         icon: 'error',
         text: mensaje,
-        timer: 1500 
+        timer: 1500
     });
 }
 
@@ -470,29 +491,29 @@ function verificarTelefono(telefono) {
         return false;
     }
 }
-var isDUI = function(str){
+var isDUI = function (str) {
     var regex = /(^\d{8})-(\d$)/,
         parts = str.match(regex);
-     // verficar formato y extraer digitos junto al digito verificador
-     if(parts !== null){
-       var digits = parts[1],
-           dig_ve = parseInt(parts[2], 10),
-           sum    = 0;
-       // sumar producto de posiciones y digitos
-       for(var i = 0, l = digits.length; i < l; i++){
-         var d = parseInt(digits[i], 10);
-         sum += ( 9 - i ) * d;
-       }
-       return dig_ve === (10 - ( sum % 10 ))%10;
-     }else{
-       return false;
-     }
- };
+    // verficar formato y extraer digitos junto al digito verificador
+    if (parts !== null) {
+        var digits = parts[1],
+            dig_ve = parseInt(parts[2], 10),
+            sum = 0;
+        // sumar producto de posiciones y digitos
+        for (var i = 0, l = digits.length; i < l; i++) {
+            var d = parseInt(digits[i], 10);
+            sum += (9 - i) * d;
+        }
+        return dig_ve === (10 - (sum % 10)) % 10;
+    } else {
+        return false;
+    }
+};
 
- var isNIT = function(str) {
+var isNIT = function (str) {
     // Expresión regular para validar formato NIT
     var regex = /^\d{4}-\d{6}-\d{3}-\d{1}$/;
-    
+
     // Verificar si el formato del NIT es correcto
     if (!regex.test(str)) {
         return false;
@@ -517,7 +538,7 @@ var isDUI = function(str){
     // Comparar el dígito verificador calculado con el proporcionado
     return digVerificador === digVerificadorCalculado;
 };
-var isSalvadoranPassportValid = function(str) {
+var isSalvadoranPassportValid = function (str) {
     // Verificar si la longitud del pasaporte es 8
     if (str.length !== 8) {
         return false;
@@ -538,10 +559,10 @@ function limpiarFormulario() {
 
     $("#usuario").val("");
     $("#clave").val("");
-    
+
     $("#btnRegistrarSocio").val("Registrar Socio");
 }
 
-function cerrarModal(){
+function cerrarModal() {
     location.href = location.href;
 }
