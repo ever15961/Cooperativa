@@ -15,7 +15,8 @@
 		"cuotas" => "pages/listadoCuotas",
 		"cerrarSesion"  => "pages/cerrar",
 		"amorti"  => "pages/listadoAmortPorSocio",
-		"interes" => "pages/listaInteres"
+		"interes" => "pages/listaInteres",
+		"mora" => "pages/listadoCuotaMora"
 	);
 
 	if(!isset($_SESSION["user"])){?>
