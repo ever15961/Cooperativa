@@ -52,7 +52,8 @@ if (isset($_SESSION["user"])) {
         "tipoMovimiento" => "listadoTipoMovimiento",
         "cerrarSesion" => "cerrar",
         "amorti" => "listadoAmortPorSocio",
-        "mora" => "listadoCuotaMora"
+        "mora" => "listadoCuotaMora",
+		"interes" => "listaInteres"
     );
     include "../pages/menu/menu.php";   
     include "../config/conexion.php";

@@ -21,13 +21,13 @@
     ON p.socio = s.id
     INNER JOIN
     interes i
-    ON i.id = p.estadoPrestamo
+    ON i.id = p.destinoPrestamo
     where s.codigoSocio=?");
 
     //Guarda el prestamo
 
     define("GUARDAR_PRESTAMOS","INSERT INTO prestamo(codigo,montoPrestamo,destinoPrestamo,fechaInicio,
-    socio,plazo_anio,plazo_cuota,estadoPrestamo,amortizacion) VALUES(?,?,?,?,?,?,?,1,0)");
+    socio,plazo_anio,plazo_cuota,estadoPrestamo,amortizacion,tasaInteres) VALUES(?,?,?,?,?,?,?,1,0,?)");
 
     //guarda las cuotas
 
@@ -101,7 +101,7 @@ define("OBTENER_CUOTAS_PAGADAS","SELECT count(*) as cuotas_pagadas FROM cuota IN
      WHERE p.id = ?
     ORDER BY c.id");
 
-define("SQL_ENCABEZADO", "SELECT p.id, p.codigo,p.montoPrestamo, i.tasaInteres, p.plazo_anio, p.plazo_cuota, i.destino, s.nombre, s.apellido, s.direccion,p.fechaInicio FROM prestamo p
+define("SQL_ENCABEZADO", "SELECT p.id, p.codigo,p.montoPrestamo, p.tasaInteres, p.plazo_anio, p.plazo_cuota, i.destino, s.nombre, s.apellido, s.direccion,p.fechaInicio FROM prestamo p
 INNER JOIN socio s ON s.id = p.socio
 INNER JOIN interes i ON i.id = p.destinoPrestamo WHERE p.id = ?");
 

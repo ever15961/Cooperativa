@@ -452,7 +452,7 @@ function validarFormulario() {
         plazo === '' || 
         plazocuota === '' || 
         socio === '' || 
-        destino === '' || 
+        destino === '0' || 
         interes === '' || 
         fInicio === ''
     ) {

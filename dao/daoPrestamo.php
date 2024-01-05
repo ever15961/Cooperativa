@@ -147,7 +147,7 @@ function registrarPrestamo(){
     // Generar un código único para el préstamo
     $codigoUnico = obtenerCodigoPrestamo($data["socio"],$data["fechaInicio"],$data["monto"]);
     $stm = $conexion->prepare(GUARDAR_PRESTAMOS);
-    $stm->bind_param("sdisiii",$codigoUnico, $data["monto"], $data["destino"],$data["fechaInicio"],$data["socio"],$data["plazo_anio"],$data["plazo_cuota"]);
+    $stm->bind_param("sdisiiii",$codigoUnico, $data["monto"], $data["destino"],$data["fechaInicio"],$data["socio"],$data["plazo_anio"],$data["plazo_cuota"],$data["tasaInteres"]);
 
     if($stm->execute()){
         $stm = $conexion->query(SELECCIONAR_ULTIMO_PRESTAMO);

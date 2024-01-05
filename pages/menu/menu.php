@@ -124,8 +124,8 @@ if (isset($_SESSION["user"])) {
 								<a class="dropdown-item" href="<?php echo $links["usuarios"].".php";?>">
 									<img src="<?php echo $path; ?>images/usuarios.png" class="itemsLine"/>Usuarios
 								</a>
-								<a class="dropdown-item" href="<?php echo $links["tipoCuenta"].".php";?>">
-									<img src="<?php echo $path; ?>images/tipoCuenta.png" class="itemsLine"/>Tipo Cuenta
+								<a class="dropdown-item" href="<?php echo $links["interes"].".php";?>">
+									<img src="<?php echo $path; ?>images/tipoCuenta.png" class="itemsLine"/>Interes
 								</a>
 								<a class="dropdown-item" href="<?php echo $links["tipoOperacion"].".php";?>">
 									<img src="<?php echo $path; ?>images/tipoOperacion.png" class="itemsLine"/>Tipo Operacion

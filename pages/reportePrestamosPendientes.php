@@ -135,7 +135,11 @@ if (isset($_SESSION["user"])) {
         $pdf->Cell(40, 8, utf8_decode(" "), 1, 0, 'C', 1);
     } else {
         foreach ($listaPrestamosP as $item) {
-   
+          if($item[5]==1){
+            $saldoPendiente=$item[2];
+          }else{
+            $saldoPendiente=$item[4];
+          }
 
             $pdf->SetX(5);
             //$pdf->Cell(60,10,utf8_decode('Imprimiendo línea número ').$i,1,1);
@@ -144,7 +148,7 @@ if (isset($_SESSION["user"])) {
             $pdf->Cell(60, 12, $item[1], 1, 0, 'C', 1);
             $pdf->Cell(30, 12, "$" . number_format($item[2], 4), 1, 0, 'C', 1);
             $pdf->Cell(25, 12, utf8_decode($item[3]) . "%", 1, 0, 'C', 1);
-            $pdf->Cell(40, 12, "$" . number_format($item[4], 4), 1, 1, 'C', 1);
+            $pdf->Cell(40, 12, "$" . number_format($saldoPendiente, 4), 1, 1, 'C', 1);
 
             $i++;
             $contador++;

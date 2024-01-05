@@ -64,7 +64,8 @@ $links = array(
     "cerrarSesion"  => "cerrar",
     "cuentas" => "listadoCuotas",
     "amorti" => "listadoAmortPorSocio",
-    "mora" => "listadoCuotaMora"
+    "mora" => "listadoCuotaMora",
+    "interes" => "listaInteres"
 );
 include "../dao/daoPrestamo.php";
 include "../pages/menu/menu.php";

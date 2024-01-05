@@ -61,7 +61,8 @@ $links = array(
     "tipoMovimiento" => "listadoTipoMovimiento",
     "cerrarSesion"  => "cerrar",
     "amorti" => "listadoAmortPorSocio",
-    "mora" => "listadoCuotaMora"
+    "mora" => "listadoCuotaMora",
+    "interes" => "listaInteres"
 );
 
 $lista = listarSocios();

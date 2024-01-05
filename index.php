@@ -14,7 +14,8 @@
 		"tipoMovimiento" => "pages/listadoTipoMovimiento",
 		"cuotas" => "pages/listadoCuotas",
 		"cerrarSesion"  => "pages/cerrar",
-		"amorti"  => "pages/listadoAmortPorSocio"
+		"amorti"  => "pages/listadoAmortPorSocio",
+		"interes" => "pages/listaInteres"
 	);
 
 	if(!isset($_SESSION["user"])){?>
