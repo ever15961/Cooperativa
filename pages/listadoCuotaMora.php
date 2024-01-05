@@ -45,12 +45,7 @@ if (isset($_SESSION["user"])) {
     $nombreUsuario = $_SESSION["user"];
     $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
-    // Verifica el rol y redirige si es necesario
-    if ($rolUsuario === "Empleado") {
-        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-        header("Location: listadoPrestamosEmp.php");
-        exit();
-    }
+
 
 $url = "../";
 $links = array(
@@ -129,9 +124,6 @@ $codigos = obtenerCodigosClientes();
                                 <a class='dropdown-item text-secundary' href='#' onclick='abrirReporte($item[id])'>
                                 <i class='fas fa-eye'></i> Informacion
                             </a>
-                                <a class='dropdown-item text-danger' href='#'  onclick='eliminar($item[id])'>
-                                    <i class='fas fa-trash-alt'></i> Eliminar
-                                </a>
                             </div>
                         </div>
                     </td>

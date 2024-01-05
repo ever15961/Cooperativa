@@ -242,7 +242,17 @@ function ingresarEmpleado()
 
   // Obtener parámetros del formulario
   $data = obtenerParametros();
+  $stm = $conexion->prepare(VERIFICAR_USUARIO_EXISTE);
+  $stm->bind_param("s", $data["usuario"]);
+  $stm->execute();
+  $stm->store_result();
 
+  if ($stm->num_rows > 0) {
+      // El usuario ya existe
+      header('Content-Type: application/json');
+      echo json_encode(["success" => false, "message" => "El usuario ya existe"]);
+      return;
+  }
   // Ingresar usuario
   $idUsuario = 0;
   $pass=$encriptar($data["clave"]);

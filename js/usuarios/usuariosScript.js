@@ -409,6 +409,13 @@ function iniciarPeticion(data, fn) {
                    text: data.message,
                    timer: 1500
                });
+               limpiarFormulario();
+               setTimeout(() => {
+                   window.location.reload();
+               }, 1500);
+               if (fn != null) {
+                   fn(data);
+               }
            } else {
                Swal.fire({
                    position: "top-end",
@@ -418,14 +425,6 @@ function iniciarPeticion(data, fn) {
                    text: data.message,
                    timer: 1500
                });
-           }
-       }).then(() => {
-           limpiarFormulario();
-           setTimeout(() => {
-               window.location.reload();
-           }, 1500);
-           if (fn != null) {
-               fn(data);
            }
        }).catch((error) => {
            console.error("Ha fallado la petición:", error);

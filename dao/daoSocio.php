@@ -1,4 +1,4 @@
-<?php 
+<?php
 //creando constantes
 include "util/sqlSocio.php";
 
@@ -127,11 +127,11 @@ function editarSocio()
         // Obtener la contraseña y el id
         $pass = $encriptar($_POST["pass"]);
         $id = $_POST["id"];
-        $usuario=$_SESSION["user"];
+        $usuario = $_SESSION["user"];
 
         // Verificar la contraseña
         $stm = $conexion->prepare(COMPROBAR_USUARIOEMP);
-        $stm->bind_param("ss", $usuario, $pass);  
+        $stm->bind_param("ss", $usuario, $pass);
 
         if ($stm->execute()) {
             $result = $stm->get_result();
@@ -145,7 +145,19 @@ function editarSocio()
                 $identificacion = 0;
 
                 $data = obtenerParametros();
-
+            
+                // Verificar si el correo ya existe
+                $stm = $conexion->prepare(VERIFICAR_CORREO_EXISTE_ACTUALIZAR);
+                $stm->bind_param("si", $data["correo"],$id);
+                $stm->execute();
+                $stm->store_result();
+            
+                if ($stm->num_rows > 0) {
+                    // El correo ya existe
+                    header('Content-Type: application/json');
+                    echo json_encode(["success" => false, "message" => "El correo electrónico ya está registrado"]);
+                    return;
+                }
                 $stm = $conexion->prepare(OBTENER_CLAVES_PRIMARIAS);
                 $stm->bind_param("i", $posicion);
 
@@ -158,7 +170,7 @@ function editarSocio()
                 }
 
                 $stm = $conexion->prepare(ACTUALIZAR_SOCIO);
-                $stm->bind_param("ssssi", $data["nombre"], $data["apellido"], $data["telefono"], $data["direccion"], $socio);
+                $stm->bind_param("sssssi", $data["nombre"], $data["apellido"], $data["telefono"], $data["direccion"], $data["correo"], $socio);
                 $stm->execute();
 
                 $stm = $conexion->prepare(ACTUALIZAR_IDENTIFICACION);
@@ -192,12 +204,36 @@ function ingresarSocio()
 
     // Obtener parámetros del formulario
     $data = obtenerParametros();
+    // Verificar si el usuario ya existe
+    $stm = $conexion->prepare(VERIFICAR_USUARIO_EXISTE);
+    $stm->bind_param("s", $data["usuario"]);
+    $stm->execute();
+    $stm->store_result();
 
+    if ($stm->num_rows > 0) {
+        // El usuario ya existe
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "El usuario ya existe"]);
+        return;
+    }
+
+    // Verificar si el correo ya existe
+    $stm = $conexion->prepare(VERIFICAR_CORREO_EXISTE);
+    $stm->bind_param("s", $data["correo"]);
+    $stm->execute();
+    $stm->store_result();
+
+    if ($stm->num_rows > 0) {
+        // El correo ya existe
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "El correo electrónico ya está registrado"]);
+        return;
+    }
     // Ingresando datos a la base de datos
 
     // Ingresar usuario
     $idUsuario = 0;
-    $clave=$encriptar($data["clave"]);
+    $clave = $encriptar($data["clave"]);
     $stm = $conexion->prepare(INGRESAR_USUARIO);
     $stm->bind_param("ss", $data["usuario"], $clave);
 
@@ -225,14 +261,15 @@ function ingresarSocio()
     $stm = $conexion->prepare(INGRESAR_SOCIO);
 
     $stm->bind_param(
-        "ssissis",
+        "ssississ",
         $data["nombre"],
         $data["apellido"],
         $data["nIdentificacion"],
         $data["telefono"],
         $codigo,
         $data["idUsuario"],
-        $data["direccion"]
+        $data["direccion"],
+        $data["correo"]
     );
 
     if ($stm->execute()) {
@@ -264,7 +301,7 @@ function obtenerCodigoSocio($nombre, $apellido)
             $n = rand(0, strlen($nombre));
             $codigo .= $completo[$n];
             $completo[$n] = " ";
-            $completo = str_replace(" ","",$completo);
+            $completo = str_replace(" ", "", $completo);
         }
     }
     return $codigo;
@@ -282,7 +319,8 @@ function obtenerParametros()
         "nIdentificacion" => $_POST["nIdentificacion"],
         "usuario" => $_POST["usuario"],
         "clave" => $_POST["clave"],
-        "direccion" => $_POST["direccion"]
+        "direccion" => $_POST["direccion"],
+        "correo" => $_POST["correo"]
     );
 }
 

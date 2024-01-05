@@ -48,7 +48,7 @@ if (isset($_SESSION["user"])) {
     // Verifica el rol y redirige si es necesario
     if ($rolUsuario === "Empleado") {
         // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-        header("Location: listadoSociosEmp.php");
+        header("Location: ../index.php");
         exit();
     }
 $url = "../";

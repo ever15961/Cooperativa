@@ -64,3 +64,4 @@
 
     //obtener id empleado
     define("SELECCIONAR_EMPLEADO","SELECT identificacion FROM empleado where id=?");
+    define("VERIFICAR_USUARIO_EXISTE","SELECT * FROM usuario where usuario = ?");

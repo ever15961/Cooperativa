@@ -148,6 +148,7 @@ function modificar($id, elemento) {
     $("#direccion").val(collTd[4].innerText);
     $("#telefono").val(collTd[6].innerText);
     $("#nIdentificacion").val(collTd[5].innerText);
+    $("#correo").val(collTd[7].innerText);
 
     $("#usuario").hide();
     $("#clave").hide();
@@ -185,7 +186,8 @@ function registrarSocio(e) {
         if (document.getElementById('nombres').value == "" || document.getElementById('apellidos').value == ""
             || document.getElementById('direccion').value == "" || document.getElementById('telefono').value == ""
             || document.getElementById('nIdentificacion').value == "" || document.getElementById('usuario').value == ""
-            || document.getElementById('clave').value == "" || document.getElementById('tipoIdentificacion').value == "0") {
+            || document.getElementById('clave').value == "" || document.getElementById('tipoIdentificacion').value == "0"
+            || document.getElementById('correo').value == "") {
             Swal.fire({
                 position: "top-end",
                 title: 'System',
@@ -196,6 +198,7 @@ function registrarSocio(e) {
             })
 
         } else {
+            if(validarCorreo(document.getElementById('correo').value)){
             if (verificarClave(document.getElementById('clave').value)) {
                 var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
                 var nIdentificacion = document.getElementById('nIdentificacion').value;
@@ -258,13 +261,24 @@ function registrarSocio(e) {
                     timer: 5000
                 });
             }
+        }else{
+                Swal.fire({
+                    position: "top-end",
+                    title: 'System',
+                    showConfirmButton: false,
+                    icon: 'error',
+                    html: 'Correo invalido',
+                    timer: 5000
+                });
+            }
 
 
         }
     } else {
         if (document.getElementById('nombres').value == "" || document.getElementById('apellidos').value == ""
             || document.getElementById('direccion').value == "" || document.getElementById('telefono').value == ""
-            || document.getElementById('nIdentificacion').value == "" || document.getElementById('tipoIdentificacion').value == "0") {
+            || document.getElementById('nIdentificacion').value == "" || document.getElementById('tipoIdentificacion').value == "0"
+            || document.getElementById('correo').value == "") {
             Swal.fire({
                 position: "top-end",
                 title: 'System',
@@ -275,6 +289,7 @@ function registrarSocio(e) {
             })
 
         } else {
+            if(validarCorreo(document.getElementById('correo').value)){
             var tipoIdentificacion = document.getElementById('tipoIdentificacion').value;
             var nIdentificacion = document.getElementById('nIdentificacion').value;
             var numero = document.getElementById('telefono').value;
@@ -323,12 +338,28 @@ function registrarSocio(e) {
                 default:
                     mostrarError('Tipo de identificación no válido');
             }
+        }else{
+            Swal.fire({
+                position: "top-end",
+                title: 'System',
+                showConfirmButton: false,
+                icon: 'error',
+                text: 'Correo invalido',
+                timer: 1500
+            }) 
+        }
         }
     }
 
 
 }
+function validarCorreo(correo) {
+    // Expresión regular para validar el formato de un correo electrónico
+    var regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // Verificar si el correo cumple con el formato
+    return regexCorreo.test(correo);
+}
 function verificarClave(clave) {
     // La expresión regular requiere al menos una letra mayúscula, al menos un número y al menos un carácter especial
     var regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).+$/;
@@ -362,6 +393,13 @@ function iniciarPeticion(data, fn, event) {
                     text: data.message,
                     timer: 1500
                 });
+                limpiarFormulario();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+                if (fn != null) {
+                    fn(data);
+                }
             } else {
                 Swal.fire({
                     position: "top-end",
@@ -371,14 +409,6 @@ function iniciarPeticion(data, fn, event) {
                     text: data.message,
                     timer: 1500
                 });
-            }
-        }).then(() => {
-            limpiarFormulario();
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
-            if (fn != null) {
-                fn(data);
             }
         }).catch((error) => {
             console.error("Ha fallado la petición:", error);
@@ -433,6 +463,13 @@ function iniciarPeticion(data, fn, event) {
                             text: data.message,
                             timer: 1500
                         });
+                        limpiarFormulario();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                        if (fn != null) {
+                            fn(data);
+                        }
                     } else {
                         Swal.fire({
                             position: "top-end",
@@ -442,14 +479,6 @@ function iniciarPeticion(data, fn, event) {
                             text: data.message,
                             timer: 1500
                         });
-                    }
-                }).then(() => {
-                    limpiarFormulario();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
-                    if (fn != null) {
-                        fn(data);
                     }
                 }).catch((error) => {
                     console.error("Ha fallado la petición:", error);

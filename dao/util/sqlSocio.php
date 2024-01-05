@@ -9,8 +9,8 @@
    WHERE u.usuario =? AND u.clave =?");   
     //ingresar socio
     define("INGRESAR_SOCIO",
-    "INSERT INTO socio(nombre,apellido,identificacion,telefono,codigoSocio,usuario,direccion)
-     VALUES(?,?,?,?,?,?,?)");
+    "INSERT INTO socio(nombre,apellido,identificacion,telefono,codigoSocio,usuario,direccion,correo)
+     VALUES(?,?,?,?,?,?,?,?)");
 
     //ingresar nuevo numero de identificacion
     define("INGRESAR_IDENTIFICACION","INSERT INTO identificacion(numero,tipoIdentificacion)
@@ -26,7 +26,8 @@ define("ELIMINAR_USUARIO","DELETE FROM usuario where id=?");
     define("SELECCIONAR_ULTIMA_IDENTIFICACION","SELECT MAX(id) FROM identificacion");
 
     //listando socios
-    define("SELECCIONAR_TOODS_SOCIOS","SELECT nombre,apellido,i.numero, codigoSocio, telefono,ti.tipo,s.id,s.direccion
+    define("SELECCIONAR_TOODS_SOCIOS","SELECT nombre,apellido,i.numero, codigoSocio, telefono,ti.tipo,s.id,s.direccion,
+    s.correo
                                        FROM socio s
                                        INNER JOIN identificacion i
                                        ON i.id = s.identificacion
@@ -40,7 +41,7 @@ define("ELIMINAR_USUARIO","DELETE FROM usuario where id=?");
                                        where s.id=?");
 
    //actualizar socio
-    define("ACTUALIZAR_SOCIO","UPDATE socio SET nombre=?,apellido=?,telefono=?,direccion=? WHERE id=?");
+    define("ACTUALIZAR_SOCIO","UPDATE socio SET nombre=?,apellido=?,telefono=?,direccion=?,correo=? WHERE id=?");
 
     //actualizar identificacion
     define("ACTUALIZAR_IDENTIFICACION","UPDATE  identificacion SET numero=?,tipoIdentificacion=? WHERE id=?");
@@ -50,3 +51,8 @@ define("ELIMINAR_USUARIO","DELETE FROM usuario where id=?");
 
     //obtener id socio
     define("SELECCIONAR_SOCIO","SELECT usuario,identificacion FROM socio where id = ?");
+
+    define("VERIFICAR_USUARIO_EXISTE","SELECT * FROM usuario where usuario = ?");
+
+    define("VERIFICAR_CORREO_EXISTE","SELECT * FROM socio where correo = ?");
+    define("VERIFICAR_CORREO_EXISTE_ACTUALIZAR","SELECT * FROM socio where correo = ? and id!=?");

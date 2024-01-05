@@ -88,6 +88,7 @@ $lista = listarSocios();
                     <th>Direccion</th>
                     <th>Identificación</th>
                     <th>Teléfono</th>
+                    <th>Correo</th>
                     <th></th>
                    
                 </tr>
@@ -105,6 +106,7 @@ $lista = listarSocios();
                                 <td>" . $item[7] . "</td>
                                 <td title='".$item[5]."' data-toggle='tooltip'>" . $item[2] . "</td>
                                 <td>" . $item[4] . "</td>
+                                <td>" . $item[8] . "</td>
                                 
                                 <td> 
                                 <div class='dropdown'>
