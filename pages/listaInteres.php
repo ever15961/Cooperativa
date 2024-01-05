@@ -107,9 +107,6 @@ $lista = listarInteres();
                                 <a class='dropdown-item editar' data-toggle='modal' data-target='#modalRegistroInteres' onclick='modificar($item[2],this)'>
                                     <i class='bi bi-pen'></i>Editar
                                 </a>
-                                    <a class='dropdown-item text-danger' href='#'  onclick='eliminar($item[2])'>
-                                        <i class='fas fa-trash-alt'></i> Eliminar
-                                    </a>
                                 </div>
                             </div>
                                 </td>";
