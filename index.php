@@ -23,6 +23,22 @@
 		<script>location.href="pages/formularioInicio.php";</script>
 	<?php }
 
+// Inicia la sesión
+
+// Verifica si la variable de sesión "user" está configurada
+if (isset($_SESSION["user"])) {
+    // Accede al valor de la variable de sesión "user"
+    $nombreUsuario = $_SESSION["user"];
+    $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
+
+    // Verifica el rol y redirige si es necesario
+    if ($rolUsuario === "Socio") {
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: faq.html");
+        exit();
+    }
+}
+
 ?>
 <head>
 	<meta charset="utf-8">

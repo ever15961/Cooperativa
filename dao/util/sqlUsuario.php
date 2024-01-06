@@ -9,7 +9,7 @@
     //ingresar usuario
     define("INGRESAR_USUARIO","INSERT INTO usuario(usuario,clave,rol) VALUES(?,?,?)");
     //ingresar usuarioSocio
-    define("COMPROBAR_USUARIOSOC","SELECT e.nombre,e.apellido,e.rol FROM usuario u
+    define("COMPROBAR_USUARIOSOC","SELECT u.usuario,u.rol FROM usuario u
                                 INNER JOIN socio e 
                                 ON e.usuario = u.id
                                 WHERE u.usuario =? AND u.clave =?");
@@ -65,3 +65,12 @@
     //obtener id empleado
     define("SELECCIONAR_EMPLEADO","SELECT identificacion FROM empleado where id=?");
     define("VERIFICAR_USUARIO_EXISTE","SELECT * FROM usuario where usuario = ?");
+    define("VERIFICAR_CORREO_EXISTE","SELECT u.usuario FROM socio s
+    INNER JOIN usuario u
+    ON u.id=s.usuario
+     where correo = ?");
+//seleccionar usuario
+    define("SELECCIONAR_USUARIO","SELECT usuario FROM socio where correo = ?");
+
+      //actualizar identificacion
+      define("ACTUALIZAR_CLAVE","UPDATE  usuario SET clave=? WHERE id=?");

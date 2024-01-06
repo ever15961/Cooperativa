@@ -19,41 +19,32 @@
 	<link href="../css/style.css" rel="stylesheet">
 
 	<link href="../css/styleClient.css" rel="stylesheet">
-	<script src="../js/sweetalert/sweetalert2.all.min.js"></script>
-
 </head>
 
 <body>
 	<div class="wrapper-main p-5">
 		<div class="container">
-			<div class="card col-10 mx-auto border ">
-				<div class="row pt-4 pl-2 pr-3">
-					<div class="col-4 p-0 mh-100">
-						<img src="../images/index.jpeg" class="col-12 m-0 h-100 rounded">
+			<div class="card col-10 mx-auto border">
+				<div class="row pt-4">
+					<div class="col-12 text-center">
+						<h4 class="text-center">Recuperación de cuenta</h4>
 					</div>
-
+				</div>
+				<div class="row justify-content-center">
 					<div class="col-7">
-						<h4 class="text-center col-12"> Iniciar Sesión </h4>
 						<form action="">
 							<div class="form-group">
-								<label for="username">Nombre de usuario</label>
-								<input type="text" name="username" id="username" class="form-control">
-
-								<label for="clave" class="mt-4">Contraseña</label>
-								<input type="password" name="clave" id="clave" class="form-control">
-
-								<input type="submit" value="Iniciar Sesión" id="btnIniciarSesion" class="btn btn-success active mt-4">
-
-								<p class="mt-4">Olvidaste la Contraseña?,
-									<a href="" id="enlaceRecuperar">Recuperar Contraseña</a>.</p>
+								<label for="correor">Correo</label>
+								<input type="text" name="correor" id="correor" class="form-control">
+								<input type="submit" value="Buscar correo" id="btnBuscarCorreo"
+									class="btn btn-success active mt-4">
 							</div>
-
 						</form>
 					</div>
 				</div>
 				<div class="row">
 					<div id="fondo">
-					
+
 					</div>
 				</div>
 			</div>
@@ -71,22 +62,6 @@
 	<script src="../js/jquery.fancybox.min.js"></script>
 	<script src="../js/script.js"></script>
 	<script src="../js/usuario/usuarioScript.js"></script>
-	<?php include "modal/modalRecuperarContraEmail.php"?>
-	<?php include "modal/modalCodigo.php"?>
-	<?php include "modal/modalUpdateCotra.php"?>
 </body>
-<script>
-        // Método para abrir el modal
-        function abrirModal() {
-            $("#modalEmail").modal("show");
-        }
 
-        // Asignar el método al evento clic del enlace
-        $(document).ready(function () {
-            $("#enlaceRecuperar").click(function (e) {
-                e.preventDefault(); // Evitar que el enlace lleve a otra página
-                abrirModal(); // Llamar al método para abrir el modal
-            });
-        });
-    </script>
 </html>
