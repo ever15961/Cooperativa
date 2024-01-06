@@ -220,17 +220,17 @@ function iniciarSesion(e) {
     }).then((data) => {
         if (data.success) {
             Swal.fire({
-                position: "top-end",
+                position: "center",
                 title: 'System',
                 showConfirmButton: false,
                 icon: 'success',
-                text: data.message,
+                text: data.message + data.usuario,
                 timer: 1500
             });
             redirect();
         } else {
             Swal.fire({
-                position: "top-end",
+                position: "center",
                 title: 'System',
                 showConfirmButton: false,
                 icon: 'error',

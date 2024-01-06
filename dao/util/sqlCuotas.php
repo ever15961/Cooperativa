@@ -27,7 +27,33 @@ define("OBTENER_CUOTAS_PRESTAMO", "SELECT c.id,p.codigo,c.numeroCuota,c.montoCuo
                                     ORDER BY c.numeroCuota;");
 
 define("OBTENER_PRESTAMOS_CODIGOS", "SELECT codigo FROM prestamo");
+define("LISTA_PRESTAMOS_SOCIOS", "SELECT p.codigo,p.montoPrestamo,i.destino,p.fechaInicio FROM prestamo p 
+INNER JOIN socio s 
+ON s.id = p.socio
+INNER JOIN interes i 
+ON i.id = p.destinoPrestamo
+INNER JOIN usuario u 
+ON u.id = s.usuario
+WHERE u.id = ?;");
 
+define("CUOTAS_NO_PAGADAS","SELECT c.id,p.codigo,c.numeroCuota,c.montoCuota,c.fechavencimiento,c.estado
+FROM prestamo p 
+INNER JOIN cuota c
+ON c.prestamo = p.id
+WHERE p.codigo = ? and c.estado=1
+ORDER BY c.numeroCuota;");
+
+define("CUOTAS_PAGADAS","SELECT c.id,p.codigo,c.numeroCuota,c.montoCuota,c.fechavencimiento,c.estado
+FROM prestamo p 
+INNER JOIN cuota c
+ON c.prestamo = p.id
+WHERE p.codigo = ? and c.estado=2
+ORDER BY c.numeroCuota;");
+
+define("TODAS_CUOTAS","SELECT c.numeroCuota, c.montoCuota, c.fechavencimiento, c.estado FROM cuota c
+INNER JOIN prestamo p 
+ON p.id = c.prestamo
+WHERE p.codigo = ?");
 
 define("SELECCIONAR_CUOTA", "SELECT c.id,p.id as codigo FROM prestamo p 
             INNER JOIN cuota c 

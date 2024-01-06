@@ -112,3 +112,19 @@ ON p.id = c.prestamo
 INNER JOIN interes i
 ON i.id=p.destinoPrestamo WHERE c.estado = 1 AND c.fechaVencimiento < CURDATE() AND p.estadoPrestamo = 1 GROUP BY p.id");
 
+define("SELECCIONAR_PRESTAMOS_SOCIO", "SELECT p.id, p.plazo_anio, p.plazo_cuota, p.destinoPrestamo, p.fechaInicio, p.estadoPrestamo
+FROM prestamo p 
+INNER JOIN 
+socio s ON s.id=p.socio
+WHERE s.codigoSocio = ?");
+
+
+define("PRESTAMOS_POR_SOCIO","SELECT s.nombre,s.apellido,s.direccion,p.montoPrestamo,i.destino,p.fechaInicio,p.estadoPrestamo,p.id,p.codigo FROM prestamo p 
+INNER JOIN socio s 
+ON s.id = p.socio
+INNER JOIN interes i 
+ON i.id = p.destinoPrestamo
+INNER JOIN usuario u 
+ON u.id = s.usuario
+WHERE u.id = ?;");
+ define("TODOS_TIPO_PRESTAMOS","SELECT * FROM interes;");

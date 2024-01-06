@@ -218,12 +218,12 @@ function iniciarSesion()
                 $_SESSION["user"] = $data["usuario"];
                 $_SESSION["rol"] = "Socio";
                 header('Content-Type: application/json');
-                echo json_encode(["success" => true, "message" => "Bienvenido"]);
+                echo json_encode(["success" => true, "message" => "Bienvenido", "usuario"=>$data['usuario']]);
                 return;
          
             }else{
                 header('Content-Type: application/json');
-                echo json_encode(["success" => false, "message" => "Usuario o clave incorrecta"]);
+                echo json_encode(["success" => false, "message" => "Credenciales erróneas"]);
                 return;
             }
             

@@ -9,10 +9,67 @@ $(document).ready(function () {
 
 var iniciarBuscar = () => {
     $("#buscarcuota").click(obtenerCuotasPrestamo);
+    $("#limpiarBusqueda").click(limpiarCodigo);
+    $("#tipoCuota").change(setearCuotas);
+}
+
+var setearCuotas = () => {
+    var tipo = $("#tipoCuota").val();
+
+    var data = new FormData();
+
+    data.append("codigo", $("#cuota").val());
+
+    if (tipo.endsWith("1")) {
+        data.append("operacion", "obtenerCuotasPagadas");
+
+    } else if (tipo.endsWith("2")) {
+        data.append("operacion", "obtenerCuotasNoPagadas");
+
+    } else {
+        obtenerCuotasPrestamo();
+        return;
+    }
+
+    fetch("../dao/daoCuota.php",
+        {
+            method: "POST",
+            body: data
+        }
+    ).then((request) => {
+        if(request.ok){
+            return request.json();
+        }else{
+            throw "Error en la petición";
+        }
+    }).then((request) => {
+            imprimirDetallePrestamo(request);
+    }).catch((error) => {
+        return error;
+    })
+
+}
+
+function imprimirCuotasCondicionadas(data){
+    var body = $("#cuotasCuerpo")[0];
+    body.innerHTML = data;
+    setearEventos();
+}
+
+var limpiarCodigo = () => {
+    $("#cuota").val("");
+    $("#cuota")[0].removeAttribute("disabled");
+    $("#cuotasCuerpo")[0].innerHTML="";
+    $("#listadoCuotas")[0].classList.add("hide");
+    $("#detallePrestamo")[0].classList.add("hide");
+
+    $("#tipoCuota").val(0);
 }
 
 var obtenerCuotasPrestamo = () => {
     codigoPrestamo = $("#cuota").val();
+
+    $("#cuota")[0].setAttribute("disabled","true");
 
     var data = new FormData();
     data.append("codigo", codigoPrestamo);
@@ -40,6 +97,9 @@ var obtenerCuotasPrestamo = () => {
 }
 
 function imprimirDetallePrestamo(data) {
+    var tipo = $("#tipoCuota")[0];
+    tipo.removeAttribute("disabled");
+
     var detalle = data[0];
     var cuotas = data[1];
 
@@ -60,6 +120,7 @@ function imprimirCuotas(cuotas) {
     var fila, numeroCuota, monto, vencimiento, estado, btnPagar, filaBtn, estadoStr;
 
     var cuotaAnteriorPagada = true; // Variable para rastrear si la cuota anterior está pagada
+
 
     for (var i = 0; i < cuotas.length; i++) {
         fila = document.createElement("tr");

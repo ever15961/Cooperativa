@@ -456,3 +456,14 @@ function listarPrestamosMora(){
         return null;
     }
 }
+
+function listarPrestamosSocio(){
+    include "../config/conexion.php";
+    $stm = $conexion->prepare(PRESTAMOS_POR_SOCIO);
+    $stm->bind_param("i", $_SESSION["codeUser"]);
+    if($stm->execute()){
+       $data =  $stm->get_result();
+       return $data->fetch_all();
+    }
+    return null;
+}

@@ -25,19 +25,52 @@
 
 // Inicia la sesión
 
-// Verifica si la variable de sesión "user" está configurada
-if (isset($_SESSION["user"])) {
-    // Accede al valor de la variable de sesión "user"
-    $nombreUsuario = $_SESSION["user"];
-    $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
+		$links = "";
 
-    // Verifica el rol y redirige si es necesario
-    if ($rolUsuario === "Socio") {
-        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-        header("Location: faq.html");
-        exit();
-    }
-}
+		if($_SESSION["rol"]=="Socio"){
+			
+			$links = array(
+				"movimientos" => "pages/listadoPrestamosSocio",
+				"cuentas" => "pages/listadoCuotasSocio",
+				"cerrarSesion"  => "pages/cerrar"
+			);
+			include "pages/menu/menuSocios.php";
+
+		}else if($_SESSION["rol"]=="Admin"){
+			$links = array(
+				"movimientos" => "pages/listadoPrestamos",
+				"cuentas" => "pages/listadoCuotas",
+				"socios" => "pages/listadoSocios",
+				"roles" => "pages/listadoRoles",
+				"usuarios" => "pages/listadoUsuarios",
+				"tipoCuenta" => "pages/listadoTipoCuenta",
+				"tipoOperacion" => "pages/listadoTipoOperacion",
+				"tipoMovimiento" => "pages/listadoTipoMovimiento",
+				"cerrarSesion"  => "pages/cerrar",
+				"amorti" => "pages/listadoAmortPorSocio",
+				"mora" => "pages/listadoCuotaMora",
+				"interes" => "pages/listaInteres"
+			);
+		
+			include "pages/menu/menu.php";
+		}else{
+			$links = array(
+				"movimientos" => "pages/listadoPrestamos",
+				"cuentas" => "pages/listadoCuotas",
+				"socios" => "pages/listadoSocios",
+				"roles" => "pages/listadoRoles",
+				"usuarios" => "pages/listadoUsuarios",
+				"tipoCuenta" => "pages/listadoTipoCuenta",
+				"tipoOperacion" => "pages/listadoTipoOperacion",
+				"tipoMovimiento" => "pages/listadoTipoMovimiento",
+				"cerrarSesion"  => "pages/cerrar",
+				"amorti" => "pages/listadoAmortPorSocio",
+				"mora" => "pages/listadoCuotaMora",
+				"interes" => "pages/listaInteres"
+			);
+			include "pages/menu/menu.php";
+		}
+   
 
 ?>
 <head>
@@ -62,9 +95,6 @@ if (isset($_SESSION["user"])) {
 </head>
 <body>
 <div class="wrapper-main">
-	
-    <!-- Navigation -->
-   <?php include "pages/menu/menu.php";?>
 	
     <header class="slider-main">
         <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
