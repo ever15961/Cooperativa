@@ -111,7 +111,7 @@ if (isset($_SESSION["user"])) {
                     <td>$i</td>
                     <td>".$item[8]."</td>
                     <td class='" . ($item[6] == "1" ? 'text-success' : 'text-danger') . "'>$ " . number_format($item[3], 2) . "</td>
-                    <td class='" . ($item[4] == "1" ? 'text-primary' : ($item[4] == "2" ? 'text-info' : 'text-warning')) . "'>" .
+                    <td class=" . $item[4] . ">" .
                         $item[4] .
                         "</td>
                     <td>$item[5]</td>

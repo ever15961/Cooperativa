@@ -9,7 +9,7 @@
     //ingresar usuario
     define("INGRESAR_USUARIO","INSERT INTO usuario(usuario,clave,rol) VALUES(?,?,?)");
     //ingresar usuarioSocio
-    define("COMPROBAR_USUARIOSOC","SELECT u.usuario,u.rol FROM usuario u
+    define("COMPROBAR_USUARIOSOC","SELECT u.usuario,u.rol,u.id FROM usuario u
                                 INNER JOIN socio e 
                                 ON e.usuario = u.id
                                 WHERE u.usuario =? AND u.clave =?");

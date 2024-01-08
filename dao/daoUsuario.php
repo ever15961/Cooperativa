@@ -217,6 +217,7 @@ function iniciarSesion()
     
                 $_SESSION["user"] = $data["usuario"];
                 $_SESSION["rol"] = "Socio";
+                $_SESSION["codeUser"] = $data["id"];
                 header('Content-Type: application/json');
                 echo json_encode(["success" => true, "message" => "Bienvenido", "usuario"=>$data['usuario']]);
                 return;
