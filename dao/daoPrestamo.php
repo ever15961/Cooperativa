@@ -467,3 +467,19 @@ function listarPrestamosSocio(){
     }
     return null;
 }
+function obtenerPrestamosPorEstado() {
+    include "../config/conexion.php";
+
+    $stm = $conexion->query(OBTENER_CANTIDAD_PRESTAMOS_POR_ESTADO);
+    if($stm) {
+        return $stm->fetch_all();
+    }
+}
+function obtenerPrestamosPorAnio() {
+    include "../config/conexion.php";
+
+    $stm = $conexion->query(OBTENER_PRESTAMOS_ANIO);
+    if($stm) {
+        return $stm->fetch_all();
+    }
+}

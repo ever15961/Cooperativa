@@ -128,3 +128,13 @@ INNER JOIN usuario u
 ON u.id = s.usuario
 WHERE u.id = ?;");
  define("TODOS_TIPO_PRESTAMOS","SELECT * FROM interes;");
+
+ define("OBTENER_PRESTAMOS_ANIO", "SELECT YEAR(p.fechaInicio) as fecha, COUNT(p.id) as idprestamo FROM prestamo p
+GROUP BY YEAR(p.fechaInicio)");
+
+//Para el grafico de pastel, cantidad de prestamos totales,inactivos,activos
+define("OBTENER_CANTIDAD_PRESTAMOS_POR_ESTADO", "SELECT 
+COUNT(p.id) as total,
+SUM(CASE WHEN p.estadoPrestamo = 1 THEN 1 ELSE 0 END) AS activos,
+SUM(CASE WHEN p.estadoPrestamo = 2 THEN 1 ELSE 0 END) AS inactivos
+FROM prestamo p;");
