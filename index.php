@@ -143,7 +143,7 @@ if ($_SESSION["rol"] == "Socio") {
 				</a>
 			</div>
 		</header>
-
+		<br></br>
 		<!-- Contenido de la página -->
 		<div class="container">
 			<!-- Sección "Acerca de" -->
@@ -181,7 +181,7 @@ if ($_SESSION["rol"] == "Socio") {
 					</div>
 				</div>
 			</div>
-
+			<br></br>
 			<!-- Sección "Contacto" -->
 			<div class="contact-section">
 				<h2 class="section-title">Contáctenos</h2>
@@ -191,7 +191,7 @@ if ($_SESSION["rol"] == "Socio") {
 				<a href="pages/formularioContacto.php" class="btn btn-primary">Contacto</a>
 			</div>
 		</div>
-
+		<br></br>
 		<!-- Pie de página -->
 		<footer class="footer-main">
 			<div class="container">
