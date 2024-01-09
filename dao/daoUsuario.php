@@ -2,7 +2,7 @@
 //creando constantes
 include "util/sqlUsuario.php";
 if (session_status() == PHP_SESSION_NONE) {
-    include "util/session_start.php"; 
+    include "util/session_start.php";
 }
 
 //parametro de operacion a realizar
@@ -65,7 +65,7 @@ function actualizarContra()
         echo json_encode(["success" => false, "message" => "Error al obtener el usuario"]);
         return;
     } else {
-        $usuario= $stm->get_result()->fetch_assoc();
+        $usuario = $stm->get_result()->fetch_assoc();
     }
     $stm = $conexion->prepare(ACTUALIZAR_CLAVE);
     $stm->bind_param("si", $pass, $usuario['usuario']);
@@ -116,7 +116,7 @@ function buscarCorreo()
     $stm->store_result();
 
     if ($stm->num_rows > 0) {
-        
+
         $stm->bind_result($usuario);
         $stm->fetch();
         enviar($usuario);
@@ -137,42 +137,80 @@ function enviar($usuario)
     $codigo = generarCodigo();
     $_SESSION['codigo'] = $codigo;
 
-    $origenNombre = 'Bank'; //nombre que visualiza el receptor del email como "origen" del email (es quien envía el email)
-    $origenEmail = 'vaquerano222@gmail.com'; //email que visualiza el receptor del email como "origen" del email (es quien envía el email)
-    $destinatarioEmail = $_POST['correor']; //destinatario del email, o sea, a quien le estamos enviando el email
-    $uid = md5(uniqid(time())); //frabrico un ID único que usaré para el "boundary"
+    $origenNombre = 'Bank'; // Nombre que visualiza el receptor del email como "origen" del email (es quien envía el email)
+    $origenEmail = 'vaquerano222@gmail.com'; // Email que visualiza el receptor del email como "origen" del email (es quien envía el email)
+    $destinatarioEmail = $_POST['correor']; // Destinatario del email, es decir, a quien le estamos enviando el email
+    $uid = md5(uniqid(time())); // Fabrico un ID único que usaré para el "boundary"
 
-    $asuntoEmail = 'Codigo de recuperacion'; //asunto del email
+    $asuntoEmail = 'Recuperación de Contraseña'; // Asunto del email
 
-    //cuerpo del email:
-    $cuerpoMensaje = "Hola $usuario reciba un cordial saludo.\r\n";
-    $cuerpoMensaje .= "El motivo de este correo es para entregar el siguiente codigo.\r\n";
-    $cuerpoMensaje .= "$codigo \r\n";
-    $cuerpoMensaje .= "sin mas \r\n";
-    $cuerpoMensaje .= "feliz dia...\r\n";
-    //fin cuerpo del email.
+    // Nueva URL del logo
+    $logoUrl = 'https://logos-world.net/wp-content/uploads/2021/03/Commerzbank-Logo.png';
 
-    //cabecera del email (forma correcta de codificarla)
+    // Cuerpo del email en formato HTML
+    $cuerpoMensaje = "
+        <html>
+            <head>
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        background-color: #f4f4f4;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 20px auto;
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #333;
+                    }
+                    img {
+                        max-width: 100%;
+                        height: auto;
+                        display: block;
+                        margin: 10px auto; /* Ajustado el margen */
+                    }
+                    p {
+                        color: #555;
+                    }
+                    .code {
+                        font-size: 24px;
+                        color: #007bff;
+                        margin-bottom: 20px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <img src='$logoUrl' alt='Bank Logo' style='max-width: 150px;'> <!-- Logo más pequeño -->
+                    <h1>Hola $usuario,</h1>
+                    <p>Reciba un cordial saludo. Hemos recibido una solicitud para restablecer su contraseña.</p>
+                    <p>A continuación, le proporcionamos un código de verificación:</p>
+                    <div class='code'>$codigo</div>
+                    <p>Utilice este código para completar el proceso de recuperación de contraseña.</p>
+                </div>
+            </body>
+        </html>
+    ";
+
+    // Cabecera del email (forma correcta de codificarla)
     $header = "From: " . $origenNombre . " <" . $origenEmail . ">\r\n";
     $header .= "Reply-To: " . $origenEmail . "\r\n";
     $header .= "MIME-Version: 1.0\r\n";
-    $header .= "Content-Type: multipart/mixed; boundary=\"" . $uid . "\"\r\n\r\n";
-    //armado del mensaje y attachment
-    $mensaje = "--" . $uid . "\r\n";
-    $mensaje .= "Content-type:text/plain; charset=utf-8\r\n";
-    $mensaje .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-    $mensaje .= $cuerpoMensaje . "\r\n\r\n";
-    $mensaje .= "--" . $uid . "\r\n";
-    $mensaje .= "--" . $uid . "--";
-    //envio el email y verifico la respuesta de la función "email" (true o false)
-    if (mail($destinatarioEmail, $asuntoEmail, $mensaje, $header)) {
-        //echo 'El codigo fue enviado correctamente';
+    $header .= "Content-Type: text/html; charset=utf-8\r\n";
+
+    // Envío el email y verifico la respuesta de la función "mail" (true o false)
+    if (mail($destinatarioEmail, $asuntoEmail, $cuerpoMensaje, $header)) {
+        // echo 'El código fue enviado correctamente';
     } else {
         // echo 'Error, no se pudo enviar el email';
     }
-
 }
-
 function generarCodigo()
 {
     // Generar un número aleatorio de 100000 a 999999
@@ -205,38 +243,38 @@ function iniciarSesion()
             header('Content-Type: application/json');
             echo json_encode(["success" => true, "message" => "Bienvenido"]);
             return;
-           
-        }else{
+
+        } else {
             $stm = $conexion->prepare(COMPROBAR_USUARIOSOC);
-        $stm->bind_param("ss", $username, $password);
-    
-        if ($stm->execute()) {
-            $data = $stm->get_result();
-            if ($data->num_rows > 0) {
-                $data = $data->fetch_assoc();
-    
-                $_SESSION["user"] = $data["usuario"];
-                $_SESSION["rol"] = "Socio";
-                $_SESSION["codeUser"] = $data["id"];
-                header('Content-Type: application/json');
-                echo json_encode(["success" => true, "message" => "Bienvenido", "usuario"=>$data['usuario']]);
-                return;
-         
-            }else{
-                header('Content-Type: application/json');
-                echo json_encode(["success" => false, "message" => "Credenciales erróneas"]);
-                return;
+            $stm->bind_param("ss", $username, $password);
+
+            if ($stm->execute()) {
+                $data = $stm->get_result();
+                if ($data->num_rows > 0) {
+                    $data = $data->fetch_assoc();
+
+                    $_SESSION["user"] = $data["usuario"];
+                    $_SESSION["rol"] = "Socio";
+                    $_SESSION["codeUser"] = $data["id"];
+                    header('Content-Type: application/json');
+                    echo json_encode(["success" => true, "message" => "Bienvenido", "usuario" => $data['usuario']]);
+                    return;
+
+                } else {
+                    header('Content-Type: application/json');
+                    echo json_encode(["success" => false, "message" => "Credenciales erróneas"]);
+                    return;
+                }
+
             }
-            
-    }
         }
 
     } else {
-        
+
         header('Content-Type: application/json');
         echo json_encode(["success" => false, "message" => "Error desconocido"]);
         return;
-}
+    }
 }
 
 function eliminarUsuario()
