@@ -9,9 +9,9 @@ if (isset($_SESSION["user"])) {
     $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
     // Verifica el rol y redirige si es necesario
-    if ($rolUsuario === "Empleado") {
+    if ($rolUsuario === "Socio") {
         // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-        header("Location: listadoPrestamosEmp.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -83,7 +83,9 @@ if (isset($_SESSION["user"])) {
             "amorti" => "listadoAmortPorSocio",
             "mora" => "listadoCuotaMora",
             "interes" => "listaInteres",
-            "poranio" => "generar_reporte"
+            "poranio" => "generar_reporte",
+            "estadosp" => "generar_reporte_estado",
+            "home" => "../index"
         );
         include "../pages/menu/menu.php"; ?>
         <h1 class="mt-5 text-center">Prestamos por cada año</h1>
@@ -105,7 +107,7 @@ if (isset($_SESSION["user"])) {
 
         
        
-
+        <script src="../vendor/jquery/jquery.min.js"></script>
         <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="../js/imagesloaded.pkgd.min.js"></script>
         <script src="../js/isotope.pkgd.min.js"></script>

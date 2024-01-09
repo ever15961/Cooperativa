@@ -33,7 +33,7 @@
                                        FROM empleado e
                                        INNER JOIN identificacion i
                                        ON i.id = e.identificacion
-                                       INNER JOIN tipoIdentificacion ti
+                                       INNER JOIN tipoidentificacion ti
                                        ON ti.id = i.tipoIdentificacion
                                        INNER JOIN usuario u
                                        ON u.id = e.usuario

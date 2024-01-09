@@ -6,7 +6,11 @@ if (isset($_SESSION["user"])) {
     $nombreUsuario = $_SESSION["user"];
     $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
-
+    if ($rolUsuario === "Socio") {
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: ../index.php");
+        exit();
+    }
 
     include "../dao/daoAmortizacion.php";
     //include "../pages/menu/menu.php";
@@ -18,7 +22,7 @@ if (isset($_SESSION["user"])) {
     $listaE = encabezado_amortizacion($txtPrestamo);
     $listaAM = obtenerAmortizacion($txtPrestamo, $txtCliente);
 
-
+}
     require('../fpdf/fpdf.php');
 
     class PDF extends FPDF
@@ -195,16 +199,5 @@ if (isset($_SESSION["user"])) {
 
     }
     $pdf->Output();
-} else {
-    echo "<script>
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
-                  showConfirmButton: true
-              }).then(function() {
-                  window.location.href = '../index.php';
-              });
-          </script>";
-}
+
 ?>

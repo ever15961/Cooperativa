@@ -31,7 +31,7 @@ define("ELIMINAR_USUARIO","DELETE FROM usuario where id=?");
                                        FROM socio s
                                        INNER JOIN identificacion i
                                        ON i.id = s.identificacion
-                                       INNER JOIN tipoIdentificacion ti
+                                       INNER JOIN tipoidentificacion ti
                                        ON ti.id = i.tipoIdentificacion");
 
     //obtener claves primarias

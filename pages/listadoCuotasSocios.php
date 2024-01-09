@@ -17,6 +17,7 @@
 
     <link href="../css/styleClient.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="../js/sweetalert/sweetalert2.all.min.js"></script>
     
     <link href="../js/dataTable/data/jquery.dataTables.min.css" rel="stylesheet">
     <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
@@ -40,14 +41,16 @@ if (isset($_SESSION["user"])) {
         // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
         header("Location: ../index.php");
         exit();
-    }else if($rolUsuario==="Socio"){
-
+    }else if($rolUsuario==="Admin"){
+        header("Location: ../index.php");
+        exit();
     }
     $url = "../";
     $links = array(
         "movimientos" => "listadoPrestamosSocio",
         "cuotas"=>"listadoCuotasSocios",
-        "cerrarSesion" => "cerrar"
+        "cerrarSesion" => "cerrar",
+        "home" => "../index"
     );
     include "../pages/menu/menuSocios.php";   
     include "../config/conexion.php";

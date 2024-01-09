@@ -46,9 +46,8 @@
         $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
         // Verifica el rol y redirige si es necesario
-        if ($rolUsuario === "Empleado") {
-            // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-            header("Location: listadoPrestamosEmp.php");
+      if($rolUsuario === "Socio"){
+            header("Location: ../index.php");
             exit();
         }
 

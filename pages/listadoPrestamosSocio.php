@@ -29,19 +29,21 @@ session_start();
 if (isset($_SESSION["user"])) {
     $nombreUsuario = $_SESSION["user"];
     $rolUsuario = $_SESSION["rol"]; 
-    /*if ($rolUsuario === "Empleado") {
+    if ($rolUsuario === "Empleado") {
         // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-        header("Location: listadoPrestamosEmp.php");
+        header("Location: ../index.php");
         exit();
-    }else if($rolUsuario==="Socio"){
-        
-    }*/
+    }else  if ($rolUsuario === "Admin") {
+        header("Location: ../index.php");
+        exit();
+    }
 
     $url = "../";
     $links = array(
         "movimientos" => "listadoPrestamosSocio",
         "cerrarSesion" => "cerrar",
-        "cuotas" => "listadoCuotasSocios"
+        "cuotas" => "listadoCuotasSocios",
+        "home" => "../index"
     );
     include "../dao/daoPrestamo.php";
     include "../pages/menu/menuSocios.php";

@@ -45,6 +45,10 @@
         $nombreUsuario = $_SESSION["user"];
         $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
+        if($rolUsuario === "Socio"){
+            header("Location: ../index.php");
+            exit();
+        }
 
         $url = "../";
         $links = array(
@@ -59,7 +63,10 @@
             "cuentas" => "listadoCuotas",
             "amorti" => "listadoAmortPorSocio",
             "mora" => "listadoCuotaMora",
-            "interes" => "listaInteres"
+            "interes" => "listaInteres",
+            "poranio" => "generar_reporte",
+            "estadosp" => "generar_reporte_estado",
+            "home" => "../index"
         );
         include "../dao/daoPrestamo.php";
         include "../pages/menu/menu.php";

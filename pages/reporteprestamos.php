@@ -6,7 +6,11 @@ if (isset($_SESSION["user"])) {
     $nombreUsuario = $_SESSION["user"];
     $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
-
+    if ($rolUsuario === "Socio") {
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: ../index.php");
+        exit();
+    }
 
 
     include "../dao/daoAmortizacion.php";

@@ -7,6 +7,7 @@ if (isset($_SESSION["user"])) {
 
 }
 	?>
+	<script src="js/sweetalert/sweetalert2.all.min.js"></script>
 <!-- Top Bar -->
 <div class="top-bar">
 		<div class="container">
@@ -25,7 +26,7 @@ if (isset($_SESSION["user"])) {
 				<div class="col-lg-6">
 					<div class="contact-details">
 						<ul>
-							<li><i class="fas fa-phone fa-rotate-90"></i> +01 899 286 777</li>
+							<li><i class="fas fa-phone fa-rotate-90"></i> +01 2393-4566</li>
 							<li><i class="fas fa-map-marker-alt"></i> San Vicente</li>
 						</ul>
 					</div>
@@ -37,7 +38,7 @@ if (isset($_SESSION["user"])) {
         <div class="container m-0 col-12">
 
 			<div class="col-3">
-				<a class="navbar-brand" href="<?echo $path;?>">
+				<a class="navbar-brand" href="<?php echo $links["home"] . ".php"; ?>">
 					<img src="<?php echo $path; ?>images/logoDef2.png" alt="logo" />
 				</a>
 				<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,18 +53,18 @@ if (isset($_SESSION["user"])) {
 
 						<!--Home-->	
 						<li class="nav-item itemsList mt-2">
-							<a class="nav-link active" href="index.html">Home</a>
+							<a class="nav-link active" href="<?php echo $links["home"] . ".php"; ?>">Inicio</a>
 						</li>
 			
 						<!--Transacciones-->	
 						<li class="nav-item dropdown  itemsList mt-2" id="itemDropDown">
 							<a class="itemsLine nav-link" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<img src="<?php echo $path; ?>images/transaccion.png" class="itemsLine"/>Préstamos
+							<img src="https://img.icons8.com/color/48/000000/contract.png" class="itemsLine"/>Préstamos
 								<i class="fas fa-sort-down itemsLine icono"></i>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
 								<a class="dropdown-item" href="<?php echo $links["movimientos"].".php";?>">
-									<img src="<?php echo $path; ?>images/verMovimientos.png" class="itemsLine"/>Ver Préstamos
+									<img src="https://img.icons8.com/color/48/bank-building.png" class="itemsLine"/>Ver Préstamos
 								</a>
 								<!--<a class="dropdown-item" href="404.html">
 									<img src="<?php echo $path; ?>images/addMovimientos.png" class="itemsLine"/>
@@ -76,12 +77,12 @@ if (isset($_SESSION["user"])) {
 		
 						<li class="nav-item dropdown  itemsList mt-2" id="itemDropDown">
 							<a class="itemsLine nav-link" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<img src="<?php echo $path; ?>images/cuenta.png" class="itemsLine"/>Cuotas
+							<img src="https://img.icons8.com/color/48/000000/coins.png" class="itemsLine"/>Cuotas
 								<i class="fas fa-sort-down itemsLine icono"></i>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
 								<a class="dropdown-item" href="<?php echo $links["cuotas"].".php";?>">
-									<img src="<?php echo $path; ?>images/verCuentas.png" class="itemsLine"/>Ver Cuotas
+									<img src="https://img.icons8.com/color/48/000000/check.png" class="itemsLine"/>Ver Cuotas
 								</a>
 						
 							</div>
@@ -95,13 +96,30 @@ if (isset($_SESSION["user"])) {
 								<i class="fas fa-sort-down itemsLine icono usuario"></i>
 							</a>
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-								<a class="dropdown-item" href="faq.html">
-									<img src="<?php echo $path; ?>images/editarUser.png" class="itemsLine"/>Editar Información
-								</a>
-								
-								<a class="dropdown-item" href="<?php echo $links["cerrarSesion"]."formularioInicio.php"?>">
-									<img src="<?php echo $path; ?>images/cerrarSesion.png" class="itemsLine"/>Cerrar Sesión
-								</a>
+		
+							<a class="dropdown-item" href="#" onclick="confirmarCerrarSesion()">
+								<img src="<?php echo $path; ?>images/cerrarSesion.png" class="itemsLine" />Cerrar Sesión
+							</a>
+
+							
+							<script>
+								function confirmarCerrarSesion() {
+									Swal.fire({
+										title: '¿Estás seguro?',
+										text: 'Cerrar sesión',
+										icon: 'question',
+										showCancelButton: true,
+										confirmButtonColor: '#3085d6',
+										cancelButtonColor: '#d33',
+										confirmButtonText: 'Sí, cerrar sesión'
+									}).then((result) => {
+										if (result.isConfirmed) {
+											// Aquí puedes redirigir a la página de cerrar sesión
+											window.location.href = "<?php echo $links["cerrarSesion"]."formularioInicio.php"; ?>";
+										}
+									});
+								}
+							</script>
 							</div>
 						</li>
 					

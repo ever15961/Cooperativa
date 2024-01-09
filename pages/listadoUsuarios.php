@@ -44,16 +44,12 @@ if (isset($_SESSION["user"])) {
 
     // Verifica el rol y redirige si es necesario
     if ($rolUsuario === "Empleado") {
-        echo "<script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Acceso denegado para empleados',
-            showConfirmButton: true
-        }).then(function() {
-            window.location.href = '../index.php';
-        });
-    </script>";
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: ../index.php");
+        exit();
+    }else if ($rolUsuario === "Socio") {
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: ../index.php");
         exit();
     }
 
@@ -70,7 +66,10 @@ $links = array(
     "cerrarSesion"  => "cerrar",
     "amorti" => "listadoAmortPorSocio",
     "mora" => "listadoCuotaMora",
-    "interes" => "listaInteres"
+    "interes" => "listaInteres",
+    "poranio" => "generar_reporte",
+    "estadosp" => "generar_reporte_estado",
+    "home" => "../index"
 );
 include "../dao/daoUsuario.php";
 include "../pages/menu/menu.php";

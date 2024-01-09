@@ -50,6 +50,10 @@ if (isset($_SESSION["user"])) {
         // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
         header("Location: listadoSociosEmp.php");
         exit();
+    }else  if ($rolUsuario === "Socio") {
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: ../index.php");
+        exit();
     }
 $url = "../";
 $links = array(
@@ -64,7 +68,10 @@ $links = array(
     "cerrarSesion"  => "cerrar",
     "amorti" => "listadoAmortPorSocio",
     "mora" => "listadoCuotaMora",
-    "interes" => "listaInteres"
+    "interes" => "listaInteres",
+    "poranio" => "generar_reporte",
+    "estadosp" => "generar_reporte_estado",
+    "home" => "../index"
 );
 include "../dao/daoSocio.php";
 include "../pages/menu/menu.php";

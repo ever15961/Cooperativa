@@ -44,7 +44,11 @@ if (isset($_SESSION["user"])) {
     // Accede al valor de la variable de sesión "user"
     $nombreUsuario = $_SESSION["user"];
     $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
-
+    if ($rolUsuario === "Admin") {
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: listadoPrestamo.php");
+        exit();
+    }
 
 $url = "../";
 $links = array(
@@ -59,7 +63,10 @@ $links = array(
     "cuentas" => "listadoCuotas",
     "amorti" => "listadoAmortPorSocio",
     "mora" => "listadoCuotaMora",
-    "interes" => "listaInteres"
+    "interes" => "listaInteres",
+    "poranio" => "generar_reporte",
+    "estadosp" => "generar_reporte_estado",
+    "home" => "../index"
 );
 include "../dao/daoPrestamo.php";
 include "../pages/menu/menu.php";

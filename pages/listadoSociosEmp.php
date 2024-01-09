@@ -44,6 +44,11 @@ if (isset($_SESSION["user"])) {
     $nombreUsuario = $_SESSION["user"];
     $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
+    if ($rolUsuario === "Admin") {
+        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+        header("Location: ../index.php");
+        exit();
+    }
 $url = "../";
 $links = array(
     "movimientos" => "listadoPrestamos",
@@ -57,7 +62,10 @@ $links = array(
     "cerrarSesion"  => "cerrar",
     "amorti" => "listadoAmortPorSocio",
     "mora" => "listadoCuotaMora",
-    "interes" => "listaInteres"
+    "interes" => "listaInteres",
+    "poranio" => "generar_reporte",
+    "estadosp" => "generar_reporte_estado",
+    "home" => "../index"
 );
 include "../dao/daoSocio.php";
 include "../pages/menu/menu.php";
