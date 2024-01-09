@@ -294,7 +294,7 @@ function iniciarPeticionPago(data, fn) {
 
         // Después de realizar cualquier lógica adicional, abrir la nueva pestaña después de un retraso
         setTimeout(() => {
-            window.open('../dao/fpdf/PruebaH.php?id=' + idCuota, '_blank');
+            window.open('../dao/fpdf/Factura.php?id=' + idCuota, '_blank');
 
             // Cierra el mensaje de carga después de un pequeño retraso (puedes ajustar el tiempo según tus necesidades)
             setTimeout(() => {
