@@ -69,6 +69,8 @@ $links = array(
     "home" => "../index"
 );
 include "../dao/daoPrestamo.php";
+
+include "../config/mcript.php";
 include "../pages/menu/menu.php";
 $codigos = obtenerCodigosClientes();
         if ($_POST) {
@@ -132,6 +134,7 @@ $codigos = obtenerCodigosClientes();
                 $i = 1;
 
                 foreach ($lista as $item) {
+                    $idEncript=  $encriptar($item["id"]);
                     echo "<tr>
                     <td>$i</td>
                     <td>$item[nombre]</td>
@@ -150,7 +153,7 @@ $codigos = obtenerCodigosClientes();
                                 <a class='dropdown-item text-primary' href='#' onclick='mostrar($item[id])' data-toggle='modal' data-target='#modalVerCuotas'>
                                     <i class='fas fa-eye'></i> Mostrar cuotas
                                 </a>
-                                <a class='dropdown-item text-secundary' href='#' onclick='abrirReporte($item[id])'>
+                                <a class='dropdown-item text-secundary' href='#' onclick=abrirReporte('$idEncript')>
                                 <i class='fas fa-eye'></i> Informacion
                             </a>
                             </div>
@@ -211,9 +214,10 @@ $codigos = obtenerCodigosClientes();
 }
 ?>
 <script>
-function abrirReporte(idPrestamo) {
-    window.open('../dao/fpdf/reporteprestamo.php?id=' + idPrestamo, '_blank');
-}
+function abrirReporte($id) {
+        var url = '../dao/fpdf/reporteprestamo.php?id=' + encodeURIComponent($id);
+        window.open(url, '_blank');
+    }
 </script>
 </body>
 </html>

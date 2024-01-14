@@ -68,6 +68,8 @@ $links = array(
     "home" => "../index"
 );
 include "../dao/daoSocio.php";
+
+include "../config/mcript.php";
 include "../pages/menu/menu.php";
 
 $lista = listarSocios();
@@ -98,6 +100,7 @@ $lista = listarSocios();
                 $i = 1;
 
                 foreach ($lista as $item) {
+                    $idEncript=  $encriptar($item[3]);
                     echo "<tr>
                                 <td>" . $i . "</td>
                                 <td>" . $item[3] . "</td>
@@ -116,10 +119,10 @@ $lista = listarSocios();
                                 <a class='dropdown-item editar' data-toggle='modal' data-target='#modalRegistroSocio' onclick='modificar($item[6],this)'>
                                     <i class='bi bi-pen'></i>Editar
                                 </a>
-                                    <a class='dropdown-item text-primary' href='#' onclick=abrirReporte('$item[3]')>
+                                    <a class='dropdown-item text-primary' href='#' onclick=abrirReporte('$idEncript')>
                                         <i class='fas fa-eye'></i> Prestamos
                                     </a>
-                                    <a class='dropdown-item text-secundary' href='#' onclick=abrirReportep('$item[3]')>
+                                    <a class='dropdown-item text-secundary' href='#' onclick=abrirReportep('$idEncript')>
                                     <i class='fas fa-eye'></i> Prestamos pendientes
                                 </a>
                                

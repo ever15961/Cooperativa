@@ -70,9 +70,18 @@ function pagar() {
         }
 
         // Construye un array con el ID
-        $data = array('id' => $listaCuota);
+        $data = array('id' => $listaCuota);// Configura el tipo de contenido y emite la respuesta JSON
         header('Content-Type: application/json');
-        echo json_encode(["success" => true, "message" => "Cuota pagada con éxito"]);
+        
+        // Crea un array asociativo con la respuesta, incluyendo el ID
+        $respuesta = [
+            "success" => true,
+            "message" => "Cuota pagada con éxito",
+            "id" => $encriptar($id)
+        ];
+        
+        // Codifica y envía la respuesta JSON
+        echo json_encode($respuesta);
     }
 }
 

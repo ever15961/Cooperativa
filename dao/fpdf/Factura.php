@@ -4,11 +4,14 @@ require('./fpdf.php');
 include "../../config/conexion.php";
 include "../util/sqlCuotas.php";
 
+function reemplazarEspacios($cadena) {
+    return str_replace(' ', '+', $cadena);
+}
+// Obtener el ID codificado de la URL
+$idEncriptado = reemplazarEspacios(isset($_GET['id']) ? $_GET['id'] : null);
 
-// Obtén el valor de 'id' desde la URL
-$idCuota = isset($_GET['id']) ? $_GET['id'] : null;
-
-// Verifica si se proporcionó un ID válido
+// Decodificar el ID
+$idCuota = $desencriptar($idEncriptado);
 if ($idCuota === null || !is_numeric($idCuota)) {
     die('Error: ID de cuota no válido.');
 }

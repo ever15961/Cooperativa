@@ -15,10 +15,16 @@ if (isset($_SESSION["user"])) {
 
 
     include "../dao/daoAmortizacion.php";
+    include "../config/mcript.php";
     //include "../pages/menu/menu.php";
+    function reemplazarEspacios($cadena) {
+        return str_replace(' ', '+', $cadena);
+    }
+
 
     if ($_GET) {
-       $txtSocio = $_GET['id'];
+       $txtSocio = reemplazarEspacios($_GET['id']);
+       $txtSocio=$desencriptar($txtSocio);
     }
 
     $socio = obtenerSocioP($txtSocio);

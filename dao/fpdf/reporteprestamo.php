@@ -9,10 +9,17 @@ if (isset($_SESSION["user"])) {
 
 
     include "../daoPrestamo.php";
+    include "../../config/mcript.php";
     //include "../pages/menu/menu.php";
 
-    // Obtén el valor de 'id' desde la URL
-    $idPrestamo = isset($_GET['id']) ? $_GET['id'] : null;
+    function reemplazarEspacios($cadena) {
+        return str_replace(' ', '+', $cadena);
+    }
+    // Obtener el ID codificado de la URL
+    $idEncriptado = reemplazarEspacios(isset($_GET['id']) ? $_GET['id'] : null);
+    
+    // Decodificar el ID
+    $idPrestamo = $desencriptar($idEncriptado);
 
     // Verifica si se proporcionó un ID válido
     if ($idPrestamo === null || !is_numeric($idPrestamo)) {

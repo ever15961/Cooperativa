@@ -195,7 +195,7 @@ function obtenerIdCuota($codigo, $numCuota)
                 if ($cuotasPagadas == $totalCuotas) {
                     actualizarEstadoPrestamo($code);
                 }
-                echo json_encode(array("respuesta" => 0, "id" => $id));
+                echo json_encode(array("respuesta" => 0, "id" => $encriptar($id)));
                 return null;
             }
 
