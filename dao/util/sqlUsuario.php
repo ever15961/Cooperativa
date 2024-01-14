@@ -74,3 +74,25 @@
 
       //actualizar identificacion
       define("ACTUALIZAR_CLAVE","UPDATE  usuario SET clave=? WHERE id=?");
+
+
+      //Socios
+      
+    //ingresar usuario
+    define("INGRESAR_USUARIO_SOCIO","INSERT INTO usuario(usuario,clave,rol) VALUES(?,?,3)");
+
+     //ingresar socio
+     define("INGRESAR_SOCIO",
+     "INSERT INTO socio(nombre,apellido,identificacion,telefono,codigoSocio,usuario,direccion,correo)
+      VALUES(?,?,?,?,?,?,?,?)");
+
+    //actualizar socio
+     define("ACTUALIZAR_SOCIO","UPDATE socio SET nombre=?,apellido=?,telefono=?,direccion=?,correo=? WHERE id=?");
+ 
+  
+
+     //obtener id socio
+     define("SELECCIONAR_SOCIO","SELECT usuario,identificacion FROM socio where id = ?");
+ 
+     define("VERIFICAR_CORREO_EXISTE_ACTUALIZAR","SELECT * FROM socio where correo = ? and id!=?");
+ 

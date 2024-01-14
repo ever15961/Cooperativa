@@ -18,7 +18,9 @@ function elegirOperacion($op)
         case "ingresar":
             ingresarEmpleado();
             break;
-
+        case "ingresarSocio":
+            ingresarSocio();
+            break;
         case "editar":
             editarUsuario();
             break;
@@ -47,6 +49,134 @@ function elegirOperacion($op)
         default:
             break;
     }
+}
+
+
+function ingresarSocio()
+{
+    // Incluyendo la conexión a la base de datos
+    include "../config/conexion.php";
+
+    // Obtener parámetros del formulario
+    $data = obtenerParametrosSocio();
+    // Verificar si el usuario ya existe
+    $stm = $conexion->prepare(VERIFICAR_USUARIO_EXISTE);
+    $stm->bind_param("s", $data["usuario"]);
+    $stm->execute();
+    $stm->store_result();
+
+    if ($stm->num_rows > 0) {
+        // El usuario ya existe
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "El usuario ya existe"]);
+        return;
+    }
+
+    // Verificar si el correo ya existe
+    $stm = $conexion->prepare(VERIFICAR_CORREO_EXISTE);
+    $stm->bind_param("s", $data["correo"]);
+    $stm->execute();
+    $stm->store_result();
+
+    if ($stm->num_rows > 0) {
+        // El correo ya existe
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "El correo electrónico ya está registrado"]);
+        return;
+    }
+    // Ingresando datos a la base de datos
+
+    // Ingresar usuario
+    $idUsuario = 0;
+    $clave = $encriptar($data["clave"]);
+    $stm = $conexion->prepare(INGRESAR_USUARIO_SOCIO);
+    $stm->bind_param("ss", $data["usuario"], $clave);
+
+    if ($stm->execute()) {
+        $stm = $conexion->query(SELECCIONAR_ULTIMO_USUARIO);
+        if ($stm) {
+            $data["idUsuario"] = $stm->fetch_row()[0];
+        }
+    }
+
+    // Ingresar identificación
+    $idIdentificacion = 0;
+    $stm = $conexion->prepare(INGRESAR_IDENTIFICACION);
+    $stm->bind_param("si", $data["nIdentificacion"], $data["tIdentificacion"]);
+    if ($stm->execute()) {
+        $stm = $conexion->query(SELECCIONAR_ULTIMA_IDENTIFICACION);
+        if ($stm) {
+            $data["nIdentificacion"] = $stm->fetch_row()[0];
+        }
+    }
+
+    $codigo = obtenerCodigoSocio($data["nombre"], $data["apellido"]);
+
+    // Ingresando socio 
+    $stm = $conexion->prepare(INGRESAR_SOCIO);
+
+    $stm->bind_param(
+        "ssississ",
+        $data["nombre"],
+        $data["apellido"],
+        $data["nIdentificacion"],
+        $data["telefono"],
+        $codigo,
+        $data["idUsuario"],
+        $data["direccion"],
+        $data["correo"]
+    );
+
+    if ($stm->execute()) {
+        // Construir la respuesta en formato JSON
+        header('Content-Type: application/json');
+        echo json_encode(["success" => true, "message" => "Registro ingresado"]);
+    } else {
+        // Si hay un error, también devolver un JSON con el mensaje de error
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "message" => "Error al ingresar el registro"]);
+    }
+}
+
+function obtenerCodigoSocio($nombre, $apellido)
+{
+    $completo = $nombre . $apellido;
+    $completo = str_replace(" ", "", $completo);
+
+    $iteracion = rand(1, 6);
+
+    $codigo = "";
+
+    for ($i = 1; $i <= 6; $i++) {
+        if ($i == $iteracion) {
+            $n = rand(0, 9);
+            $codigo .= $n;
+
+        } else {
+            $n = rand(0, strlen($nombre));
+            $codigo .= $completo[$n];
+            $completo[$n] = " ";
+            $completo = str_replace(" ", "", $completo);
+        }
+    }
+    return $codigo;
+}
+
+
+//obtiene parametros de formulario mediante POST
+function obtenerParametrosSocio()
+{
+    return array(
+        "nombre" => $_POST["nombres"],
+        "apellido" => $_POST["apellidos"],
+        "telefono" => $_POST["telefono"],
+        "tIdentificacion" => $_POST["tipoIdentificacion"],
+        "nIdentificacion" => $_POST["nIdentificacion"],
+        "usuario" => $_POST["usuario"],
+        "clave" => $_POST["clave_"],
+        "direccion" => $_POST["direccion"],
+        "correo" => $_POST["correo"]
+    );
 }
 
 function actualizarContra()

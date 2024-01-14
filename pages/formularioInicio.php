@@ -43,6 +43,7 @@
 								<input type="password" name="clave" id="clave" class="form-control">
 
 								<input type="submit" value="Iniciar Sesión" id="btnIniciarSesion" class="btn btn-success active mt-4">
+								<a  name="enlaceresgistrar" id="enlaceresgistrar" class="btn btn-info mt-4" href="" role="button" data-toggle="modal" data-target="#modalRegistroSocioI"/>Registrarse</a>
 
 								<p class="mt-4">Olvidaste la Contraseña?,
 									<a href="" id="enlaceRecuperar">Recuperar Contraseña</a>.</p>
@@ -74,12 +75,18 @@
 	<?php include "modal/modalRecuperarContraEmail.php"?>
 	<?php include "modal/modalCodigo.php"?>
 	<?php include "modal/modalUpdateCotra.php"?>
+
+	<?php include "modal/modalRegistroSocioI.php" ?>
 </body>
 <script>
         // Método para abrir el modal
         function abrirModal() {
             $("#modalEmail").modal("show");
         }
+
+		function abrirModalRegistrar() {
+		$("#modalRegistroSocioI").modal("show");
+	}
 
         // Asignar el método al evento clic del enlace
         $(document).ready(function () {
