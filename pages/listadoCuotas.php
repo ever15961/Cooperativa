@@ -41,7 +41,7 @@
         $nombreUsuario = $_SESSION["user"];
         $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
 
-        if($rolUsuario === "Socio"){
+        if ($rolUsuario === "Socio") {
             header("Location: ../index.php");
             exit();
         }
@@ -169,9 +169,22 @@
         <script src="../js/owl.carousel.min.js"></script>
         <script src="../js/jquery.fancybox.min.js"></script>
         <script src="../js/zebraDialog/zebra_dialog.src.js"></script>
+        <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
+
 
         <?php
 
+    } else {
+        echo "<script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+            showConfirmButton: true
+        }).then(function() {
+            window.location.href = '../index.php';
+        });
+    </script>";
     }
     ?>
 </body>

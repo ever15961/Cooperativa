@@ -201,6 +201,7 @@
         <script src="../js/owl.carousel.min.js"></script>
         <script src="../js/jquery.fancybox.min.js"></script>
         <script src="../js/zebraDialog/zebra_dialog.src.js"></script>
+        <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
 
         <script>
             // Agrega un manejador de eventos al formulario
@@ -237,4 +238,4 @@
     ?>
 </body>
 
-</html>F
+</html>

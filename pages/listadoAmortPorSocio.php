@@ -30,6 +30,7 @@
 
     <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
 
+    <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
 
 </head>
 

@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 // Verifica si la variable de sesión "user" está configurada

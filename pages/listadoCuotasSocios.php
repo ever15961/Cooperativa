@@ -158,6 +158,17 @@ if (isset($_SESSION["user"])) {
 
 <?php
 
+}else{
+    echo "<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+        showConfirmButton: true
+    }).then(function() {
+        window.location.href = '../index.php';
+    });
+</script>";
 }
 ?>
 </body>

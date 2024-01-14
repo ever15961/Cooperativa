@@ -1,34 +1,5 @@
-<?php
-// Inicia la sesión
-session_start();
-
-// Verifica si la variable de sesión "user" está configurada
-if (isset($_SESSION["user"])) {
-    // Accede al valor de la variable de sesión "user"
-    $nombreUsuario = $_SESSION["user"];
-    $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
-
-    // Verifica el rol y redirige si es necesario
-    if ($rolUsuario === "Socio") {
-        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
-        header("Location: ../index.php");
-        exit();
-    }
-
-    include "../dao/daoPrestamo.php";
-
-    $lista = obtenerPrestamosPorAnio();
-    //print_r($lista);
-
-    $listaJS = json_encode($lista);
-
-    //echo $listaJS;
-
-?>
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,10 +24,30 @@ if (isset($_SESSION["user"])) {
 
         <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
 
-        <script src="../js/sweetalert/sweetalert2.all.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
+<?php
+// Inicia la sesión
+session_start();
+
+if (isset($_SESSION["user"])) {
+    $nombreUsuario = $_SESSION["user"];
+    $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
+
+    if ($rolUsuario === "Socio") {
+        header("Location: ../index.php");
+        exit();
+    }
+
+    include "../dao/daoPrestamo.php";
+
+    $lista = obtenerPrestamosPorAnio();
+
+    $listaJS = json_encode($lista);
+
+
+    ?>
 
         <script>
             var datosJS = <?php echo $listaJS; ?>;
@@ -78,7 +69,7 @@ if (isset($_SESSION["user"])) {
             "tipoCuenta" => "listadoTipoCuenta",
             "tipoOperacion" => "listadoTipoOperacion",
             "tipoMovimiento" => "listadoTipoMovimiento",
-            "cerrarSesion"  => "cerrar",
+            "cerrarSesion" => "cerrar",
             "cuentas" => "listadoCuotas",
             "amorti" => "listadoAmortPorSocio",
             "mora" => "listadoCuotaMora",
@@ -104,8 +95,6 @@ if (isset($_SESSION["user"])) {
             </div>
         </div>
         </div>
-
-        
        
         <script src="../vendor/jquery/jquery.min.js"></script>
         <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -116,22 +105,24 @@ if (isset($_SESSION["user"])) {
         <script src="../js/owl.carousel.min.js"></script>
         <script src="../js/jquery.fancybox.min.js"></script>
         <script src="../js/zebraDialog/zebra_dialog.src.js"></script>
+        <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
 
     <?php
-} else {
-    // Si la variable de sesión "user" no está configurada, muestra un SweetAlert
-    echo "<script>
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
-                  showConfirmButton: true
-              }).then(function() {
-                  window.location.href = '../index.php';
-              });
-          </script>";
-}
-    ?>
-    </body>
 
-    </html>
+} else {
+    echo "<script src='../js/sweetalert/sweetalert2.all.min.js'></script>";
+
+    echo "<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+        showConfirmButton: true
+    }).then(function() {
+        window.location.href = '../index.php';
+    });
+</script>";
+}
+?>
+</body>
+</html>

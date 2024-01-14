@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,6 +9,19 @@
 </head>
 
 <body>
+<script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
+
+<?php
+if (isset($_SESSION["user"])) {
+        // Accede al valor de la variable de sesión "user"
+    $nombreUsuario = $_SESSION["user"];
+    $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
+
+    if ($rolUsuario === "Socio") {
+        header("Location: ../index.php");
+        exit();
+    }
+?>
 
 	<!--Formulario de registro de socios-->
 	<div class="wrapper-main" id="formRegistroSocio">
@@ -167,5 +179,17 @@
 		});
 	</script>
 </body>
-
+<?php 
+} else {
+    echo "<script>
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+                  showConfirmButton: true
+              }).then(function() {
+                  window.location.href = '../index.php';
+              });
+    </script>";
+}?>
 </html>

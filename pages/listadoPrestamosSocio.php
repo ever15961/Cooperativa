@@ -55,6 +55,7 @@ if (isset($_SESSION["user"])) {
     $nombre = "";
     $apellido = "";
     $direccion = "";
+    $ocultar="";
 
     if (count($lista) == 0) {
         $ocultar = "hide";
@@ -150,7 +151,6 @@ if (isset($_SESSION["user"])) {
 
 <!-- Bootstrap core JavaScript -->
 <?php include "modal/modalVerCuotas.php" ?>
-<?php include "modal/modalRegistroPrestamo.php" ?>
 
 <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../js/imagesloaded.pkgd.min.js"></script>

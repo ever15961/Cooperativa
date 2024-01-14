@@ -38,13 +38,12 @@ session_start();
 
 // Verifica si la variable de sesión "user" está configurada
 if (isset($_SESSION["user"])) {
-    // Accede al valor de la variable de sesión "user"
+    
     $nombreUsuario = $_SESSION["user"];
-    $rolUsuario = $_SESSION["rol"]; // Debes tener una función que obtenga el rol del usuario
+    $rolUsuario = $_SESSION["rol"]; 
 
-    // Verifica el rol y redirige si es necesario
     if ($rolUsuario === "Empleado") {
-        // Si el rol es "Empleado", redirige a otra página o realiza alguna acción
+       
         header("Location: ../index.php");
         exit();
     }else if ($rolUsuario === "Socio") {
@@ -164,6 +163,17 @@ $lista = listarUsuarios();
 
 <?php include "modal/modalRegistroUsuario.php"?>
 <?php
+}else{
+    echo "<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+        showConfirmButton: true
+    }).then(function() {
+        window.location.href = '../index.php';
+    });
+</script>";
 }
 ?>
 

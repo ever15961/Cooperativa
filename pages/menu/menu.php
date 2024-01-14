@@ -118,9 +118,6 @@ if (isset($_SESSION["user"])) {
         <i class="fas fa-sort-down itemsLine icono"></i>
     </a>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-        <a class="dropdown-item" href="<?php echo $links["roles"] . ".php"; ?>">
-            <img src="https://img.icons8.com/color/48/000000/organization.png" class="itemsLine" /> Roles <!-- Icono de organización -->
-        </a>
         <a class="dropdown-item" href="<?php echo $links["usuarios"] . ".php"; ?>">
             <img src="https://img.icons8.com/color/48/000000/conference.png" class="itemsLine" /> Usuarios <!-- Icono de conferencia -->
         </a>

@@ -26,13 +26,12 @@
     <!--<link href="../js/dataTable/dataTables.bootstrap5.min.css" rel="stylesheet">-->
     <link href="../js/dataTable/data/jquery.dataTables.min.css" rel="stylesheet">
 
-    <script src="../js/sweetalert/sweetalert2.all.min.js"></script>
-
     <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
 </head>
 
-
 <body>
+<script src="../js/sweetalert/sweetalert2.all.min.js"></script>
+
 <?php 
 // Inicia la sesión
 session_start();
@@ -156,6 +155,17 @@ $lista = listarSocios();
 <script src="../js/zebraDialog/zebra_dialog.src.js"></script>
 
 <?php
+}else{
+    echo "<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+        showConfirmButton: true
+    }).then(function() {
+        window.location.href = '../index.php';
+    });
+</script>";
 }
 ?>
 </body>

@@ -30,13 +30,12 @@
 
     <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
 
-    <!-- Incluye la biblioteca SweetAlert2 CSS y JS -->
-    <link rel="stylesheet" href="../js/sweetalert/sweetalert2.min.css" type="text/css">
-    <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
 </head>
 
 
 <body>
+    <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
+
     <?php
     session_start();
     // Verifica si la variable de sesión "user" está configurada
@@ -191,6 +190,8 @@
         <script src="../js/owl.carousel.min.js"></script>
         <script src="../js/jquery.fancybox.min.js"></script>
         <script src="../js/zebraDialog/zebra_dialog.src.js"></script>
+        <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
+
 
     <?php
     } else {

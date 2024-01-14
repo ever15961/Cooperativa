@@ -1,3 +1,33 @@
+
+ <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <!-- Bootstrap core CSS -->
+        <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Fontawesome CSS -->
+        <link href="../css/all.css" rel="stylesheet">
+        <!-- Owl Carousel CSS -->
+        <link href="../css/owl.carousel.min.css" rel="stylesheet">
+        <!-- Owl Carousel CSS -->
+        <link href="../css/jquery.fancybox.min.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="../css/style.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+        <link href="../css/styleClient.css" rel="stylesheet">
+
+        <!--<link href="../js/dataTable/dataTables.bootstrap5.min.css" rel="stylesheet">-->
+        <link href="../js/dataTable/data/jquery.dataTables.min.css" rel="stylesheet">
+
+        <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
+
+        <script src="../js/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <?php
 // Inicia la sesión
 session_start();
@@ -27,47 +57,13 @@ if (isset($_SESSION["user"])) {
     //echo $listaJS;
 
 ?>
-
-    <!DOCTYPE html>
-    <html lang="en">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <!-- Bootstrap core CSS -->
-        <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Fontawesome CSS -->
-        <link href="../css/all.css" rel="stylesheet">
-        <!-- Owl Carousel CSS -->
-        <link href="../css/owl.carousel.min.css" rel="stylesheet">
-        <!-- Owl Carousel CSS -->
-        <link href="../css/jquery.fancybox.min.css" rel="stylesheet">
-        <!-- Custom styles for this template -->
-        <link href="../css/style.css" rel="stylesheet">
-
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-        <link href="../css/styleClient.css" rel="stylesheet">
-
-        <!--<link href="../js/dataTable/dataTables.bootstrap5.min.css" rel="stylesheet">-->
-        <link href="../js/dataTable/data/jquery.dataTables.min.css" rel="stylesheet">
-
-        <link href="../css/zebra/css/flat/zebra_dialog.css" rel="stylesheet">
-
-        <script src="../js/sweetalert/sweetalert2.all.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
-        <script>
+    <script>
             var datosJS = <?php echo $listaJS; ?>;
         </script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
         <script type="text/javascript" src="../js/prestamo/prestamoestado.js"></script>
     </head>
-
     <body>
         <?php
 
@@ -119,21 +115,20 @@ if (isset($_SESSION["user"])) {
         <script src="../js/jquery.fancybox.min.js"></script>
         <script src="../js/zebraDialog/zebra_dialog.src.js"></script>
 
-    <?php
+<?php
 } else {
-    // Si la variable de sesión "user" no está configurada, muestra un SweetAlert
     echo "<script>
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
-                  showConfirmButton: true
-              }).then(function() {
-                  window.location.href = '../index.php';
-              });
-          </script>";
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+        showConfirmButton: true
+    }).then(function() {
+        window.location.href = '../index.php';
+    });
+    </script>";
 }
-    ?>
-    </body>
+?>
+</body>
 
-    </html>
+</html>

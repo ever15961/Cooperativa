@@ -168,9 +168,6 @@ $lista = listarSocios();
 <script src="../js/jquery.fancybox.min.js"></script>
 <script src="../js/zebraDialog/zebra_dialog.src.js"></script>
 
-<?php
-}
-?>
 <script>
     function abrirReporte($id) {
         var url = 'reportePrestamos.php?id=' + encodeURIComponent($id);
@@ -181,5 +178,19 @@ $lista = listarSocios();
         window.open(url, '_blank');
     }
 </script>
+<?php
+}else{
+    echo "<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario no identificado. Redirigiendo a la página de inicio de sesión...',
+        showConfirmButton: true
+    }).then(function() {
+        window.location.href = '../index.php';
+    });
+</script>";
+}
+?>
 </body>
 </html>
